@@ -1,0 +1,20 @@
+{
+  "name": "react-project",
+  "version": "1.0.0",
+  "description": "Minimal react setup.",
+  "main": "server.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node server.js",
+    "client": "node start-client.js"
+  },
+  "author": "Ivan Manan",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
+    "concurrently": "^3.6.1",
+    "express": "^4.16.3",
+    "mysql": "^2.16.0"
+  }
+}
