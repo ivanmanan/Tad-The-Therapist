@@ -44,3 +44,8 @@ database. Also date and time of the conversations.
 
 I can also use the MySQL database to store path names of the audio
 files.
+
+## Audio Response
+Use the Free Text to MP3 website to download MP3 files. Also copy and paste responses as a `txt` file and have the same file name as the `mp3` file.
+* https://www.texttomp3.online/
+* https://www.text2speech.org/ (Provides wav file; choose slow speed)
