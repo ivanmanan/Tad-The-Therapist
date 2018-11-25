@@ -15,6 +15,12 @@ To `ssh` into the Raspberry Pi, assure you are on the same network as the Rasber
 ping ivan-raspberrypi.local
 ```
 
+Pinging the Raspberry Pi should give the IP address. You can then `ssh` into the Raspberry Pi. Either command works.
+```bash
+ssh username@ivan-raspberrypi.local
+ssh username@192.168.0.xxx
+```
+
 ### Output Audio Response
 Use data transmitted from the LCDK to output an appropriate
 response. The data is used to pick the correct audio file to
