@@ -18,6 +18,9 @@ response. The data is used to pick the correct audio file to
 play. Likewise, the corresponding `txt` file will be displayed on
 the web browser.
 
+Output can be played using a python script that plays the mp3 or
+wav file. Use omxplayer.
+
 ### Web
 Web server is to display conversation history and view previous
 conversations on a web browser.
