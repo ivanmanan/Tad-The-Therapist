@@ -8,9 +8,12 @@ Back-up plan: export the file as a .txt onto the developer machine
 and have the server detect what data was transmitted.
 
 ## Raspberry Pi
-The Raspberry Pi is divided into two main directories: the speech output response and a web server. A third directory may be added
-to assist in the API communication between the LCDk and the
-Raspberry Pi.
+The Raspberry Pi is divided into two main directories: the speech output response and a web server. A third directory may be added to assist in the API communication between the LCDk and the Raspberry Pi.
+
+To `ssh` into the Raspberry Pi, assure you are on the same network as the Rasberry Pi. In this case, it would be on `UCLA_WEB`. Attempt to `ping` to the Raspberry Pi:
+```bash
+ping ivan-raspberrypi.local
+```
 
 ### Output Audio Response
 Use data transmitted from the LCDK to output an appropriate
