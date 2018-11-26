@@ -49,3 +49,6 @@ files.
 Use the Free Text to MP3 website to download MP3 files. Also copy and paste responses as a `txt` file and have the same file name as the `mp3` file.
 * https://www.texttomp3.online/
 * https://www.text2speech.org/ (Provides wav file; choose slow speed)
+
+### Connecting to Raspberry Pi on Windows
+Use VS Code. Use SSH FS. Edit raspberry_pi.sshfs.jsonc and update the correct IP address of the Raspberry Pi, which can be accessed via 192.168.0.1.
