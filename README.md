@@ -1,10 +1,15 @@
+# TO-DO List
+* LCDK --> `.txt` file --> Web Server
+    * What is the content of this `.txt` file?
+
+
 # Tad-The-Therapist
 Code for senior design project. Design project was broken down to
 two segments\: the LCDK and the web server.
 
 
 ## LCDK
-The LCDK does all the speech signal processing. It then determines an appropriate response, which is transmitted as a `.txt` file onto the developer machine.
+The LCDK does all the speech signal processing. It then determines an appropriate response, which is transmitted as a `.txt` file onto the developer machine. The `.txt` file is located in the `/lcdk/output/` folder.
 
 
 ## Web Server
@@ -32,3 +37,35 @@ Use the Free Text to MP3 website to download MP3 files. Also copy and paste resp
 * https://www.texttomp3.online/
 * https://www.text2speech.org/ (Provides wav file; choose slow speed)
 
+
+## Setting Up MySQL on VS Code
+Install MySQL via `sudo apt install mysql-server`.
+
+When you initially attempt to run `mysql -u root -p`, you obtain the following error message:
+```bash
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+```
+
+Run the following commands to reset your MySQL password. You may not be able to use special characters in your password, such as exclamation marks.
+```bash
+sudo /etc/init.d/mysql stop
+sudo service mysql start 
+sudo mysqld_safe --skip-grant-tables &
+mysql -u root
+
+mysql> use mysql;
+mysql> update mysql.user set authentication_string=PASSWORD('my_password') where user='root' and host='localhost';
+mysql> quit;
+sudo mysqladmin shutdown
+sudo service mysql start
+```
+
+Access the MySQL database via this command.
+```bash
+mysql -u root -p
+```
+
+At startup, you may need to run the following command to initialize the MySQL server.
+```bash
+sudo service mysql start
+```
