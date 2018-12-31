@@ -32,6 +32,17 @@ database. Also date and time of the conversations.
 I can also use the MySQL database to store path names of the audio
 files.
 
+
+### Frontend: User Interface
+├── App.jsx<br/>
+├── index.js<br/>
+├── **Components**<br/>
+│   ├── Clock.jsx<br/>
+│   ├── Sidebar.jsx<br/>
+│   └── Conversation.jsx<br/>
+└── styles.css<br/>
+
+
 ## Audio Response
 Use the Free Text to MP3 website to download MP3 files. Also copy and paste responses as a `txt` file and have the same file name as the `mp3` file.
 * https://www.texttomp3.online/

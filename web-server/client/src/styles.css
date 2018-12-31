@@ -1,6 +1,7 @@
 html {
     width: 100%;
     height: 100%;
+    font-size: 2em;
 }
 body {
     font-family: Sans-Serif, times-new-roman, Times;
@@ -8,4 +9,53 @@ body {
     font-size: 100%;
     margin: 0;
     padding: 0;
+}
+
+.vl-small {
+    padding-top: 2.5em;
+    border-left: 6px solid black;
+    height: 100%;
+}
+
+.vl-large {
+    border-left: 6px solid black;
+    height: 200%;
+}
+
+#title-hr {
+    display: block;
+    margin: 0;
+    border-color: black;
+    border-width: 6px;
+}
+
+.Sidebar {
+    padding-top: 0.5em;
+}
+
+.Conversation {
+    padding-top: 0.5em;
+    background-color: linen;
+}
+
+#conversation-button {
+    width: 100%;
+    height: 100%;
+    padding-top: 1.3em;
+    margin-bottom: 1.3em;
+    background-color: aliceblue;
+    font-size: 0.6em;
+}
+
+.dialogue {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.Tad-speaking {
+    background-color: aliceblue;
+}
+
+.Client-speaking {
+    background-color: papayawhip;
 }
