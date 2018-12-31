@@ -5,8 +5,13 @@ import Sidebar from './Components/Sidebar';
 import Conversation from './Components/Conversation';
 
 /*
-  NOTE: Sidebar and Conversation are sibling components that rely on information between each other
+  In active conversation, I must be able to append to the currentDialogue array in App.jsx
+  when new .txt file gets added
 
+  Perhaps have .txt files, where each line is a dialogue to be pushed into the array
+*/
+
+/*
   What if user clicks on past conversation in the middle of an active convseration?
   How do we know when the converation is over?
 */
@@ -21,10 +26,14 @@ class App extends Component {
       conversationHistory: [], // Array holding all dates/times of conversation histories
       currentDialogue: [] // Tad always speaks first; do a MySQL query based on current timeStamp
     };
+    this.changeConversation = this.changeConversation.bind(this);
   }
 
   // Using mock data
   componentDidMount() {
+
+    // Do initial SQL query on conversationHistory
+
     this.setState({
       conversation: "past",
       timeStamp: "Dec 30, 2018, 9:55:22 PM",
@@ -33,7 +42,24 @@ class App extends Component {
     });
   }
 
-  // Make functions that triggers mouse clicks and MySQL queries
+  // Make function when new conversation is initialized via new text file is recognized
+  // When conversation is over, I submit a POST request
+  // Can have a save button that ends conversation
+
+  // When old conversation was selected
+  changeConversation(new_timeStamp) {
+
+    // This is a GET request
+    // TODO: Do SQL queries to retrieve the new dialogue
+
+
+    console.log(new_timeStamp);
+    this.setState({
+      conversation: "past",
+      timeStamp: new_timeStamp,
+      currentDialogue: ["Hello, I am Tad.", "Why?", "Why not?"]
+    });
+  }
 
   render() {
     return (
@@ -55,7 +81,7 @@ class App extends Component {
 
         <div className="Content row">
           <div className="text-center col-md-3">
-            <Sidebar conversationHistory={this.state.conversationHistory}/>
+            <Sidebar conversationHistory={this.state.conversationHistory} changeConversation={this.changeConversation}/>
           </div>
           <div className="text-center col-md-1">
             <div className="vl-large"></div>

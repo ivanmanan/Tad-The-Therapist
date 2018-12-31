@@ -1,19 +1,14 @@
-# TO-DO List
-* LCDK --> `.txt` file --> Web Server
-    * What is the content of this `.txt` file?
-
-
 # Tad-The-Therapist
 Code for senior design project. Design project was broken down to
 two segments\: the LCDK and the web server.
 
 
 ## LCDK
-The LCDK does all the speech signal processing. It then determines an appropriate response, which is transmitted as a `.txt` file onto the developer machine. The `.txt` file is located in the `/lcdk/output/` folder.
+The LCDK does all the speech signal processing. The LCDK then outputs its speech recognition into a `.txt` file onto the developer machine. The `.txt` file is located in the `/lcdk/output/` folder.
 
 
 ## Web Server
-The developer machine hosts a web server that reads the content of the `.txt` file. The server also contains all the speech output responses that are to be played. Moreover, the frontend displays the entire conversation history.
+The developer machine hosts a web server that reads the content of the `.txt` file. The server contains all the speech output responses that are to be played and determines the appropriate response to the speech recognized by the LCDK. Moreover, the frontend displays the entire conversation history.
 
 
 ### Output Audio Response

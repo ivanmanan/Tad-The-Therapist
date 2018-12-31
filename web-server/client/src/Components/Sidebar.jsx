@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
+import OldConversation from './OldConversation';
 
 class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.displayConversationHistories = this.displayConversationHistories.bind(this);
   }
-
 
   displayConversationHistories() {
     const conversations = this.props.conversationHistory;
@@ -15,20 +14,12 @@ class Sidebar extends Component {
       return (<p>No past conversations.</p>)
     }
 
-    // NOTE: Need to sort conversation array base on chronological order
+    // TODO: Sort conversation array base on chronological order
 
-    // Display each time-stamp as a block and can be triggered by mouse clicks
-    // The mouse clicks in return must do a callback to the parent component
-    // See Travel Share's omnibox.jsx on how to do this with buttons and callbacks
-    return conversations.map((conversation, id) => (
-      <div className="conversation-block" key={id}>
-        <Button id="conversation-button">
-          <p>{conversation}</p>
-        </Button>
-      </div>
+    return conversations.map((timeStamp, id) => (
+      <OldConversation key={id} timeStamp={timeStamp} changeConversation={this.props.changeConversation}/>
     ));
   }
-
 
   render() {
     return (
