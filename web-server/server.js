@@ -90,7 +90,7 @@ app.post('/conversation', (req, res) => {
   
 
   // Do text2speech here
-  //say.speak("Hello!");
+  say.speak("Hello World!");
 });
 
 

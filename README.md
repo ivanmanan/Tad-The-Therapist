@@ -1,7 +1,7 @@
 # To-Do List
-* NPM say package provides audio output -- incorporate this into the Node.js backend when it detects changes in the text file, NOT as a post request
-* Read .txt files and refresh when .txt file changes
-* Build mock data in MySQL database --- have at least 3 dates
+* NPM say.js package provides audio output -- incorporate this into the Node.js backend when it detects changes in the text file
+* Use sockets to feed live conversation into the UI from the text file
+* Build mock data in MySQL database --- have at least 3 conversations
 * Implement save conversation
 * Implement get conversation
 * Implement delete conversation
