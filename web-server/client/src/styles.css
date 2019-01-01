@@ -19,7 +19,7 @@ body {
 
 .vl-large {
     border-left: 6px solid black;
-    height: 200%;
+    height: 110%;
 }
 
 #title-hr {
@@ -45,6 +45,31 @@ body {
     margin-bottom: 1.3em;
     background-color: aliceblue;
     font-size: 0.6em;
+}
+
+.Save-Conversation {
+    padding-top: 1em;
+    background-color: white;
+}
+
+#save-button {
+    background-color: palegreen;
+    width: 50%;
+}
+
+#save-button p {
+    padding-top: 0.2em;
+    font-size: 2em;
+}
+
+#delete-button {
+    background-color: pink;
+    width: 50%;
+}
+
+#delete-button p {
+    padding-top: 0.2em;
+    font-size: 2em;
 }
 
 .dialogue {

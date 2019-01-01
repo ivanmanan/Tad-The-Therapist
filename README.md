@@ -1,14 +1,26 @@
+# To-Do List
+* NPM say package provides audio output -- incorporate this into the Node.js backend when it detects changes in the text file, NOT as a post request
+* Read .txt files and refresh when .txt file changes
+* Build mock data in MySQL database --- have at least 3 dates
+* Implement save conversation
+* Implement get conversation
+* Implement delete conversation
+* Possible bug: What if user clicks on past conversation in the middle of an active convseration?
+* Posisble bug: How do we know when the converation is over?
+
+
+
 # Tad-The-Therapist
 Code for senior design project. Design project was broken down to
 two segments\: the LCDK and the web server.
 
 
 ## LCDK
-The LCDK does all the speech signal processing. The LCDK then outputs its speech recognition into a `.txt` file onto the developer machine. The `.txt` file is located in the `/lcdk/output/` folder.
+The LCDK does all the speech signal processing. The LCDK then outputs its speech recognition into a `.txt` file onto the developer machine. The LCDK also determines the appropriate response and appends it into the `.txt` file. The `.txt` file is located in the `/lcdk/output/` folder. The LCDK practically contains its own dictionary.
 
 
 ## Web Server
-The developer machine hosts a web server that reads the content of the `.txt` file. The server contains all the speech output responses that are to be played and determines the appropriate response to the speech recognized by the LCDK. Moreover, the frontend displays the entire conversation history.
+The developer machine hosts a web server that reads the content of the `.txt` file. The server contains all the speech output responses that are to be played. Moreover, the frontend displays the entire conversation history.
 
 
 ### Output Audio Response
@@ -39,6 +51,12 @@ files.
 
 
 ## Audio Response
+Playing audio in Windows machine:
+1. If you are using **wsl**, then you must follow [this guide](https://token2shell.com/howto/x410/enabling-sound-in-wsl-ubuntu-let-it-sing/). This guide does not work properly. So just switch to use PowerShell for audio development
+2. If you are using Windows **PowerShell**, then you must follow [this guide](https://www.youtube.com/watch?v=My7im5WIwrQ). For audio development purposes, you must use PowerShell.
+
+
+### Deprecated --- May Delete Section in Future
 Use the Free Text to MP3 website to download MP3 files. Also copy and paste responses as a `txt` file and have the same file name as the `mp3` file.
 * https://www.texttomp3.online/
 * https://www.text2speech.org/ (Provides wav file; choose slow speed)
@@ -75,3 +93,11 @@ At startup, you may need to run the following command to initialize the MySQL se
 ```bash
 sudo service mysql start
 ```
+
+
+
+# Argument: Why use Raspberry Pi instead of the LCDK?
+1. Raspberry Pi has capability to do distributed systems to contain a giant dictionary and querying from it. The LCDK is very limited in that regard.
+2. The Raspberry Pi can act as the server AND have all of its peripherals in one. The Raspberry Pi can use both a microphone and speakers.
+3. If we use the LCDK, it will need to be attached to the computer to act as the server.
+4. Easier development. We would be able spend more time on the project since we would be able to work remotely rather than going to the lab often.
