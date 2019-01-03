@@ -1,0 +1,7 @@
+Hello. My name is Tad. How can I help you?
+Hello Tad! I am happy.
+That is great to hear! Is there anything on your mind?
+Nope nothing at all.
+That is great to hear! Is there anything else on your mind?
+Nope I am fine.
+Okay then goodbye.

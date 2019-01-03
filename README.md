@@ -1,12 +1,10 @@
 # To-Do List
-* NPM say.js package provides audio output -- incorporate this into the Node.js backend when it detects changes in the text file
-* Use sockets to feed live conversation into the UI from the text file
-* Build mock data in MySQL database --- have at least 3 conversations
-* Implement save conversation
-* Implement get conversation
-* Implement delete conversation
+* Implement UI feature on starting a conversation with the LCDK --> This is triggered by Node.js detecting changes to a new text file in the LCDK -- let's call it output.txt --> If changes are deteted in the file, then sockets feed live data from the text file onto the conversation dialogue in React.js
+* Implement save conversation --> Obtain greatest ID value that exists in database already, and increment that existing ID by one and insert that into the table
+* Implement delete conversation -- must implement frontend button feature
 * Possible bug: What if user clicks on past conversation in the middle of an active convseration?
-* Posisble bug: How do we know when the converation is over?
+* Possible bug: How do we know when the converation is over?
+* Possible bug: What if the user refreshes in the middle of a conversation? Then the user abandoned the conversation.
 
 
 

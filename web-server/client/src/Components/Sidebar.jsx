@@ -14,8 +14,6 @@ class Sidebar extends Component {
       return (<p>No past conversations.</p>)
     }
 
-    // TODO: Sort conversation array base on chronological order
-
     return conversations.map((timeStamp, id) => (
       <OldConversation key={id} timeStamp={timeStamp} changeConversation={this.props.changeConversation}/>
     ));

@@ -6,6 +6,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const say = require('say');
+const fs = require('fs');
 const debug = require('./debug');
 
 /////////////////////////////////////////////////////////////////////
@@ -39,42 +40,49 @@ connection.connect(function(err) {
   console.log('You are now connected to the MySQL Database.')
 })
 
+// Global variable that stores all of the MySQL content into a cache
+let Conversations_Cache = {};
+
+/////////////////////////////////////////////////////////////////////
+// Event Listener
+
+// TODO: Create socket method that detects changes in a .txt file
+//       Changes in .txt file gets added to the socket
+// TODO: Implement the say.js package to voice the dialogue
+//       See the test-speak.js file on how this is done
 
 /////////////////////////////////////////////////////////////////////
 // HTTP Methods
 
 // Retrieve entirety of table to obtain list of Time Stamps
-// Also create hash table that maps time stamp to file name
+// Also creates hash table that maps time stamp to file name
 app.get('/conversations', (req, res) => {
   console.log("Running query...");
-  const query = 'SELECT * FROM Conversations;';
+  const query = 'SELECT * FROM Conversations;\n';
   console.log(query);
-
-  // Test text2speech here
-  // This may had caused all the errors previously...
-  //say.speak("Hello!");
-
-  // Must test this query by inserting fake data and text files into the MySQL database
   connection.query(query, (err, savedConversations, fields) => {
     try {
       if (err) throw err;
-
-      // ERROR: This sends an object, but we want to send an array of strings from one field
+      // Place the MySQL table into a cache
+      for (let i = 0; i < savedConversations.length; i++) {
+        let temp_timeStamp = savedConversations[i].Time_Stamp;
+        let temp_fileName = savedConversations[i].File_Name;
+        Conversations_Cache[temp_timeStamp] = temp_fileName;
+      }
       res.contentType('application/json');
       res.send(JSON.stringify(savedConversations));
     }
     catch(err) {
-      console.log("ERROR EXISTS.");
+      console.log("ERROR: " + err + "\n");
       const empty = [];
       res.contentType('application/json');
       res.send(JSON.stringify(empty));
     }
   });
-
 });
 
 
-// Insert into the MySQL database as well as append to the hash table
+// TODO: Insert into the MySQL database as well as append to the hash table --> this is just Conversations_Cache[key] = value
 // Insert query can retrieve ID number of MySQL table
 app.post('/conversation', (req, res) => {
   console.log("Running query...");
@@ -82,28 +90,40 @@ app.post('/conversation', (req, res) => {
   const dialogue = req.body.currentDialogue;
 
   // TODO: Work on creating the text file first; figure out naming convention for File_Name, then create the INSERT query
+  // Need to obtain last ID number that exists in the database so I can append as the convo#.txt file name
 
   // First create and/or append text file, then add file name onto query
   const query_one = 'INSERT INTO Conversations (Time_Stamp, File_Name) VALUES ("';
   console.log(query_one);
 
-  
-
-  // Do text2speech here
-  say.speak("Hello World!");
 });
 
 
-
-// Access the hash table global variable to find selected time stamp and its associated text file
-app.get('/conversation', (req, res) => {
-  console.log("Do nothing for now");
+// Access the cache to find selected time stamp and its associated text file
+app.get('/conversation/:timeStamp', (req, res) => {
+  const time_stamp = req.params.timeStamp;
+  console.log("Retrieving from hash table...");
+  const file_name = Conversations_Cache[time_stamp];
+  // If the file name exists in the cache
+  if (typeof(file_name) !== undefined) {
+    console.log("Key: " + time_stamp + "; Value: " + file_name + "\n");
+    // Retrieve the file and send it to frontend
+    const CONVO = "/mnt/c/therapist/lcdk/output/" + file_name;
+    const contents = fs.readFileSync(CONVO).toString().split("\n");
+    res.contentType('application/json');
+    res.send(contents);
+  }
+  else {
+    console.log("ERROR: The requested time stamp does not exist in the cache.\n")
+  }
 });
 
 
 // Delete conversation from table and from the hash table
 app.delete('/conversation', (req, res) => {
   console.log("Do nothing for now");
+  // TODO: Implement this method
+  // The frontend must also call this method
 });
 
 
