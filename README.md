@@ -1,6 +1,6 @@
 # To-Do List
 * Implement UI feature on starting a conversation with the LCDK --> This is triggered by Node.js detecting changes to a new text file in the LCDK -- let's call it output.txt --> If changes are deteted in the file, then sockets feed live data from the text file onto the conversation dialogue in React.js --- also uses the say.js package to output the voice response
-* Implement save conversation --> Obtain greatest ID value that exists in database already, and increment that existing ID by one and insert that into the table
+* Implement save conversation --> Obtain latest ID value to be inserted into database; insert that into the table with file name
 * Implement delete conversation -- must implement frontend button feature
 
 
