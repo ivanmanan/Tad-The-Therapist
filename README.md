@@ -2,10 +2,6 @@
 * Implement UI feature on starting a conversation with the LCDK --> This is triggered by Node.js detecting changes to a new text file in the LCDK -- let's call it output.txt --> If changes are deteted in the file, then sockets feed live data from the text file onto the conversation dialogue in React.js
 * Implement save conversation --> Obtain greatest ID value that exists in database already, and increment that existing ID by one and insert that into the table
 * Implement delete conversation -- must implement frontend button feature
-* Possible bug: What if user clicks on past conversation in the middle of an active convseration?
-* Possible bug: How do we know when the converation is over?
-* Possible bug: What if the user refreshes in the middle of a conversation? Then the user abandoned the conversation.
-
 
 
 # Tad-The-Therapist
@@ -93,9 +89,11 @@ sudo service mysql start
 ```
 
 
+## Scenarios to Consider
+* What if user clicks on past conversation in the middle of an active convseration?
+    * Then the user abandoned the current conversation.
+* What if the user refreshes in the middle of a conversation?
+    * Then the user abandoned the conversation.
+* How do we know when the converation is over?
+    * The `.txt` file stops obtaining appended messages. User decides to save conversation or to not save the conversation.
 
-# Argument: Why use Raspberry Pi instead of the LCDK?
-1. Raspberry Pi has capability to do distributed systems to contain a giant dictionary and querying from it. The LCDK is very limited in that regard.
-2. The Raspberry Pi can act as the server AND have all of its peripherals in one. The Raspberry Pi can use both a microphone and speakers.
-3. If we use the LCDK, it will need to be attached to the computer to act as the server.
-4. Easier development. We would be able spend more time on the project since we would be able to work remotely rather than going to the lab often.
