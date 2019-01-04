@@ -134,12 +134,12 @@ app.delete('/conversation', (req, res) => {
       const file_name = Conversations_Cache[time_stamp];
       // If the file name exists in the cache
       if (typeof(file_name) !== undefined) {
-        console.log("Key: " + time_stamp + "; Value: " + file_name);
+        console.log("Key: " + time_stamp + "; Value: " + file_name + "\n");
         // Retrieve the file and remove it from server
         const CONVO = FILE_PATH + file_name;
         fs.unlink(CONVO, (err) => {
           if (err) throw err;
-          console.log('The following file has been deleted: ' + CONVO + '\n');
+          console.log("The following file has been deleted: " + CONVO + "\n");
         })
       }
       else {
