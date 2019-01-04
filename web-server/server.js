@@ -17,9 +17,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// File path holding all the txt files may change
-// TODO: May change this to be relative to where server.js is
-const FILE_PATH = "/mnt/c/therapist";
+// NOTE: File path holding all the txt files may change
+const FILE_PATH = "/mnt/c/therapist/lcdk/output/";
 
 /////////////////////////////////////////////////////////////////////
 // MySQL Database
@@ -58,8 +57,8 @@ let Conversations_Cache = {};
 // Also creates hash table that maps time stamp to file name
 app.get('/conversations', (req, res) => {
   console.log("Running query...");
-  const query = 'SELECT * FROM Conversations;\n';
-  console.log(query);
+  const query = 'SELECT * FROM Conversations;';
+  console.log(query + '\n');
   connection.query(query, (err, savedConversations, fields) => {
     try {
       if (err) throw err;
@@ -94,7 +93,7 @@ app.post('/conversation', (req, res) => {
 
   // First create and/or append text file, then add file name onto query
   const query_one = 'INSERT INTO Conversations (Time_Stamp, File_Name) VALUES ("';
-  console.log(query_one);
+  console.log(query_one + '\n');
 
 });
 
@@ -108,22 +107,55 @@ app.get('/conversation/:timeStamp', (req, res) => {
   if (typeof(file_name) !== undefined) {
     console.log("Key: " + time_stamp + "; Value: " + file_name + "\n");
     // Retrieve the file and send it to frontend
-    const CONVO = "/mnt/c/therapist/lcdk/output/" + file_name;
+    const CONVO = FILE_PATH + file_name;
     const contents = fs.readFileSync(CONVO).toString().split("\n");
     res.contentType('application/json');
     res.send(contents);
   }
   else {
     console.log("ERROR: The requested time stamp does not exist in the cache.\n")
+    res.end();
   }
 });
 
 
 // Delete conversation from table and from the hash table
 app.delete('/conversation', (req, res) => {
-  console.log("Do nothing for now");
-  // TODO: Implement this method
-  // The frontend must also call this method
+  const time_stamp = req.body.time_stamp;
+  console.log("Running query...");
+  const query = 'DELETE FROM Conversations WHERE Time_Stamp="' + time_stamp + '";';
+  console.log(query + '\n');
+  connection.query(query, (err, result, fields) => {
+    try {
+      if (err) throw err;
+      // Retrieve from cache file name
+      // Remove the existing text file from the folder
+      console.log("Retrieving from hash table...");
+      const file_name = Conversations_Cache[time_stamp];
+      // If the file name exists in the cache
+      if (typeof(file_name) !== undefined) {
+        console.log("Key: " + time_stamp + "; Value: " + file_name + "\n");
+        // Retrieve the file and remove it from server
+        const CONVO = FILE_PATH + file_name;
+        fs.unlink(CONVO, (err) => {
+          if (err) throw err;
+          console.log('The following file has been deleted: ' + CONVO + '\n');
+        })
+      }
+      else {
+        console.log("ERROR: The requested time stamp does not exist in the cache.\n")
+        res.end();
+      }
+      // Update cache
+      delete Conversations_Cache[time_stamp];
+      // Let frontend remove time stamp from state
+      res.end()
+    }
+    catch(err) {
+      console.log("ERROR: " + err + '\n');
+      res.end();
+    }
+  });
 });
 
 

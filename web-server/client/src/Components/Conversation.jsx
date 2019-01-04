@@ -6,7 +6,6 @@ class Conversation extends Component {
     super(props);
     this.displayConvesation = this.displayConversation.bind(this);
     this.getButtonView = this.getButtonView.bind(this);
-    this.deleteConversation = this.deleteConversation.bind(this);
     this.saveConversation = this.saveConversation.bind(this);
   }
 
@@ -68,18 +67,12 @@ class Conversation extends Component {
 
   }
 
-  deleteConversation() {
-    const currentDialogue = this.props.currentDialogue;
-    console.log("DELETED!");
-  }
-
-
   getButtonView() {
     switch(this.props.conversation) {
       case "active":
       return(<Button id="save-button" onClick={this.saveConversation}><p>Save Conversation</p></Button>);
       case "past":
-        return(<Button id="delete-button" onClick={this.deleteConversation}><p>Delete Conversation</p></Button>);
+        return(<Button id="delete-button" onClick={this.props.deleteConversation}><p>Delete Conversation</p></Button>);
       case "none":
       default:
         return(<p>Start a conversation!</p>);

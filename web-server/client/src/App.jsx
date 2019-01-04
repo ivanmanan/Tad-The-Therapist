@@ -15,6 +15,7 @@ class App extends Component {
       currentDialogue: [] // Tad always speaks first; do a MySQL query based on current timeStamp
     };
     this.changeConversation = this.changeConversation.bind(this);
+    this.deleteConversation = this.deleteConversation.bind(this);
   }
 
   componentDidMount() {
@@ -47,7 +48,6 @@ class App extends Component {
 
   // When old conversation was selected
   changeConversation(new_timeStamp) {
-
     // GET request which access the conversation given time stamp key
     fetch('/conversation/' + new_timeStamp, {
       headers: {
@@ -63,6 +63,32 @@ class App extends Component {
           currentDialogue: dialogue
         });
       });
+  }
+
+  // Delete current conversation
+  // Change state of conversation from past to none
+  deleteConversation() {
+    // Submit DELETE request
+    fetch('/conversation', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'DELETE',
+      body: JSON.stringify({
+        time_stamp: this.state.timeStamp
+      })
+    })
+      .then(() => {
+        // Update state by removing element in conversation history
+        const new_conversationHistory = this.state.conversationHistory.filter(convo => convo !== this.state.timeStamp);
+        this.setState({
+          conversation: "none",
+          timeStamp: "",
+          conversationHistory: new_conversationHistory, // Conversation history gets updated
+          currentDialogue: []
+        });
+      })
   }
 
   render() {
@@ -91,7 +117,7 @@ class App extends Component {
             <div className="vl-large"></div>
           </div>
           <div className="text-center col-md-8">
-            <Conversation conversation={this.state.conversation} currentDialogue={this.state.currentDialogue}/>
+            <Conversation conversation={this.state.conversation} currentDialogue={this.state.currentDialogue} deleteConversation={this.deleteConversation}/>
           </div>
         </div>
 
