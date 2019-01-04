@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import io from 'socket.io-client'
 
 import Clock from './Components/Clock';
 import Sidebar from './Components/Sidebar';
 import Conversation from './Components/Conversation';
+
+
 
 class App extends Component {
 
@@ -17,6 +20,8 @@ class App extends Component {
     this.changeConversation = this.changeConversation.bind(this);
     this.saveConversation = this.saveConversation.bind(this);
     this.deleteConversation = this.deleteConversation.bind(this);
+    // Create the client socket --- TODO: this may be changed to 3000
+    this.socket = io('http://localhost:3001');
   }
 
   componentDidMount() {
@@ -38,9 +43,18 @@ class App extends Component {
       });
   }
 
-  // Make function when new conversation is initialized via new text file is recognized
-  // When conversation is over, I submit a POST request
-  // Can have a save button that ends conversation
+  componentWillUnmount() {
+    this.socket.close();
+  }
+
+  // TODO: May move this function to componentdidmount or call it in componentdidmount
+  // Socket function that listens to changes in a text file
+  listenConversation() {
+    // TODO: First set state to "active" conversation if not already active
+    // TODO: Append to the current dialogue state
+  }
+  
+
 
   /*
     In active conversation, I must be able to append to the currentDialogue array in App.jsx

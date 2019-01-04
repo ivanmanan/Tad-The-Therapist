@@ -52,19 +52,15 @@ let Conversations_Cache = {};
 //       See the test-speak.js file on how this is done
 
 fs.watch(FILE_PATH, (e, filename) => {
-  console.log("Event is: " + e);
   if ("output.txt") {
     console.log("File name provided: " + filename);
     // I want to emit the last two lines of the newly edited output.txt file
-    io.emit('server', {message: "Hello from the server!"})
-  }
-  else {
-    console.log("File name not provided.");
+    io.emit('server', {message: "File changed!"})
   }
 });
 
-io.on('connection', (client) => {
-
+io.on('connection', socket => {
+  socket.emit('server', {message: 'Hello from the server!'});
 });
 
 /////////////////////////////////////////////////////////////////////
