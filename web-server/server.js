@@ -7,6 +7,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const say = require('say');
 const fs = require('fs');
+const io = require('socket.io')();
 const debug = require('./debug');
 
 /////////////////////////////////////////////////////////////////////
@@ -50,6 +51,22 @@ let Conversations_Cache = {};
 // TODO: Implement the say.js package to voice the dialogue
 //       See the test-speak.js file on how this is done
 
+fs.watch(FILE_PATH, (e, filename) => {
+  console.log("Event is: " + e);
+  if ("output.txt") {
+    console.log("File name provided: " + filename);
+    // I want to emit the last two lines of the newly edited output.txt file
+    io.emit('server', {message: "Hello from the server!"})
+  }
+  else {
+    console.log("File name not provided.");
+  }
+});
+
+io.on('connection', (client) => {
+
+});
+
 /////////////////////////////////////////////////////////////////////
 // HTTP Methods
 
@@ -85,16 +102,23 @@ app.get('/conversations', (req, res) => {
 // Insert query can retrieve ID number of MySQL table
 app.post('/conversation', (req, res) => {
   console.log("Running query...");
-  const timeStamp = req.body.timeStamp;
-  const dialogue = req.body.currentDialogue;
+  const time_stamp = req.body.time_stamp;
+  const query_one = 'SELECT LAST_INSERT_ID();';
+  console.log(query_one);
+  connection.query(query_one, (err, result, fields) => {
+    // TODO: Work on creating the text file first;  
+    // Need to console.log what result outputs
+    debug(result);
+    // Need to increment last ID by 1 so I can have a new convo text file
+    // Copy the active text file and rename as convo#.txt
+    // Then insert into the MySQL database
+    // Update the hash table
 
-  // TODO: Work on creating the text file first; figure out naming convention for File_Name, then create the INSERT query
-  // Need to obtain last ID number that exists in the database so I can append as the convo#.txt file name
-
-  // First create and/or append text file, then add file name onto query
-  const query_one = 'INSERT INTO Conversations (Time_Stamp, File_Name) VALUES ("';
-  console.log(query_one + '\n');
-
+    // First create and/or append text file, then add file name onto query
+    const query_two = 'INSERT INTO Conversations (Time_Stamp, File_Name) VALUES ("';
+    console.log(query_two + '\n');
+    // TODO: POST request sends the same content from the GET request -- maintain data integrity
+  });
 });
 
 
@@ -179,5 +203,7 @@ if (deploy) {
 }
 
 app.listen(port);
+io.listen(port);
+console.log("Socket.io listening on port 3001...")
 
-console.log('Server running on port 3001...');
+console.log("Server running on port 3001...");

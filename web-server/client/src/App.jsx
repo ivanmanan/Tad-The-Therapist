@@ -15,6 +15,7 @@ class App extends Component {
       currentDialogue: [] // Tad always speaks first; do a MySQL query based on current timeStamp
     };
     this.changeConversation = this.changeConversation.bind(this);
+    this.saveConversation = this.saveConversation.bind(this);
     this.deleteConversation = this.deleteConversation.bind(this);
   }
 
@@ -65,8 +66,40 @@ class App extends Component {
       });
   }
 
+  // TODO: Test this function using Conversation.jsx and Server.js
+  // Save current conversation
+  saveConversation() {
+    // Retrieve time stamp
+    const DATE_OPTIONS = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    const date = new Date();
+    const new_timeStamp = date.toLocaleDateString('en-US', DATE_OPTIONS);
+    // Submit POST request
+    fetch('/conversation', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        time_stamp: new_timeStamp
+      })
+    })
+      .then(res => res.json())
+      .then(dialogue => {
+        // Update conversation history with newest time stamp addition
+        // TODO: test to make sure latest conversation gets pushed to the top of the History sidebar
+        let new_conversationHistory = this.state.conversationHistory;
+        new_conversationHistory.push(new_timeStamp);
+        this.setState({
+          conversation: "past",
+          time_stamp: new_timeStamp,
+          conversationHistory: new_conversationHistory,
+          currentDialogue: dialogue
+        });
+      });
+}
+
   // Delete current conversation
-  // Change state of conversation from past to none
   deleteConversation() {
     // Submit DELETE request
     fetch('/conversation', {
@@ -117,7 +150,7 @@ class App extends Component {
             <div className="vl-large"></div>
           </div>
           <div className="text-center col-md-8">
-            <Conversation conversation={this.state.conversation} currentDialogue={this.state.currentDialogue} deleteConversation={this.deleteConversation}/>
+            <Conversation conversation={this.state.conversation} currentDialogue={this.state.currentDialogue} saveConversation={this.saveConversation} deleteConversation={this.deleteConversation}/>
           </div>
         </div>
 

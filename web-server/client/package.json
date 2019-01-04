@@ -6,7 +6,8 @@
     "react": "^16.7.0",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.7.0",
-    "react-scripts": "2.1.2"
+    "react-scripts": "2.1.2",
+    "socket.io-client": "^2.2.0"
   },
   "scripts": {
     "start": "BROWSER=none react-scripts start",

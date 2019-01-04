@@ -5,3 +5,4 @@ bin/
 **/config.js
 **/build/
 **/.vscode/
+**/output.txt
