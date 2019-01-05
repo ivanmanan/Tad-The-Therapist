@@ -48,12 +48,6 @@ Playing audio in Windows machine:
 2. If you are using Windows **PowerShell**, then you must follow [this guide](https://www.youtube.com/watch?v=My7im5WIwrQ). For audio development purposes, you must use PowerShell.
 
 
-### Deprecated --- May Delete Section in Future
-Use the Free Text to MP3 website to download MP3 files. Also copy and paste responses as a `txt` file and have the same file name as the `mp3` file.
-* https://www.texttomp3.online/
-* https://www.text2speech.org/ (Provides wav file; choose slow speed)
-
-
 ## Setting Up MySQL on VS Code
 Install MySQL via `sudo apt install mysql-server`.
 
