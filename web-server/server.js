@@ -7,7 +7,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const say = require('say');
 const fs = require('fs');
-const io = require('socket.io')();
+const watch = require('node-watch');
 const debug = require('./debug');
 
 /////////////////////////////////////////////////////////////////////
@@ -18,8 +18,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// NOTE: File path holding all the txt files may change
-const FILE_PATH = "/mnt/c/therapist/lcdk/output/";
+// NOTE: Windows PowerShell use Windows file path
+// NOTE: WSL use regular file path
+//const FILE_PATH = "/mnt/c/therapist/lcdk/output/";
+const FILE_PATH = "C:\\therapist\\lcdk\\output\\";
+const OUTPUT_FILE = "output.txt";
 
 /////////////////////////////////////////////////////////////////////
 // MySQL Database
@@ -37,30 +40,68 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err
-  console.log('You are now connected to the MySQL Database.')
+  console.log('You are now connected to the MySQL Database.\n')
 })
 
 // Global variable that stores all of the MySQL content into a cache
 let Conversations_Cache = {};
 
 /////////////////////////////////////////////////////////////////////
-// Event Listener
+// Start Application
 
-// TODO: Create socket method that detects changes in a .txt file
-//       Changes in .txt file gets added to the socket
-// TODO: Implement the say.js package to voice the dialogue
-//       See the test-speak.js file on how this is done
+// NOTE: For release, run 'npm run build' in client directory
+//       The site is running on port 3001
+const deploy = false;
+if (deploy) {
+  // TODO: Add code that automates the 'npm run build' in client directory
+  //       Afterwards, insert this change into React-Setup repository
+  const path = require('path');
+  app.use(express.static(path.join(__dirname, 'client/build')));
+}
 
-fs.watch(FILE_PATH, (e, filename) => {
-  if ("output.txt") {
-    console.log("File name provided: " + filename);
-    // I want to emit the last two lines of the newly edited output.txt file
-    io.emit('server', {message: "File changed!"})
-  }
+// Set port
+var port = process.env.PORT || 3001;
+const server = app.listen(port, () => {
+  console.log("Server running on port 3001...\n");
 });
 
-io.on('connection', socket => {
-  socket.emit('server', {message: 'Hello from the server!'});
+/////////////////////////////////////////////////////////////////////
+// Event Listener
+const io = require('socket.io')(server);
+
+// This function runs every time the client refreshes
+io.sockets.on('connection', socket => {
+  console.log("Socket.io listening on port 3001...\n");
+  socket.emit('INITIALIZE', {message: 'Socket channel active between server and client...'});
+});
+
+// Socket emits new dialogue every time file changes
+watch(FILE_PATH + OUTPUT_FILE, (event, filename) => {
+  if (event === 'update') {
+    // Read the file and retrieve last two lines
+    const CONVO = FILE_PATH + OUTPUT_FILE;
+    const contents = fs.readFileSync(CONVO).toString().split("\n");
+    const SPEECH_SPEED = 1;
+    if (contents.length === 1) {
+      // This is initializing the conversation
+      const tad = contents[0];
+      say.speak(tad, 'Microsoft Zira Desktop', SPEECH_SPEED);
+      console.log("Tad: " + tad);
+      io.emit('DIALOGUE', {tad: tad, client: ""});
+    }
+    else if (contents.length < 1) {
+      // NOTE: This case should never happen based on property of the embedded device
+      return;
+    }
+    else {
+      const tad = contents[contents.length-1];
+      const client = contents[contents.length-2];
+      say.speak(tad, 'Microsoft Zira Desktop', SPEECH_SPEED);
+      console.log("Client: " + client);
+      setTimeout(() => console.log("Tad: " + tad), 700);
+      io.emit('DIALOGUE', {tad: tad, client: client});
+    }
+  }
 });
 
 /////////////////////////////////////////////////////////////////////
@@ -96,6 +137,7 @@ app.get('/conversations', (req, res) => {
 
 // TODO: Insert into the MySQL database as well as append to the hash table --> this is just Conversations_Cache[key] = value
 // Insert query can retrieve ID number of MySQL table
+// TODO: POST request ends conversation and no new content should be added into dialogue
 app.post('/conversation', (req, res) => {
   console.log("Running query...");
   const time_stamp = req.body.time_stamp;
@@ -177,29 +219,3 @@ app.delete('/conversation', (req, res) => {
     }
   });
 });
-
-
-
-/////////////////////////////////////////////////////////////////////
-// Start Application
-
-// Set port
-var port = process.env.PORT || 3001;
-
-// NOTE: For release, run 'npm run build' in client directory
-//       The site is running on port 3001
-const deploy = false;
-if (deploy) {
-
-  // TODO: Add code that automates the 'npm run build' in client directory
-  //       Afterwards, insert this change into React-Setup repository
-
-  const path = require('path');
-  app.use(express.static(path.join(__dirname, 'client/build')));
-}
-
-app.listen(port);
-io.listen(port);
-console.log("Socket.io listening on port 3001...")
-
-console.log("Server running on port 3001...");

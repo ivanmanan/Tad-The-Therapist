@@ -20,7 +20,8 @@ class App extends Component {
     this.changeConversation = this.changeConversation.bind(this);
     this.saveConversation = this.saveConversation.bind(this);
     this.deleteConversation = this.deleteConversation.bind(this);
-    // Create the client socket --- TODO: this may be changed to 3000
+    
+    // Socket client that listens to file changes from the LCDK
     this.socket = io('http://localhost:3001');
   }
 
@@ -41,25 +42,41 @@ class App extends Component {
         }
         this.setState({conversationHistory: time_stamps});
       });
+
+    // Initialize socket connection
+    this.socket.on('INITIALIZE', data => {
+      console.log(data.message);
+    });
+
+    this.socket.on('DIALOGUE', data => {
+
+      console.log(data);
+      // TODO: If data.client is an empty string, then don't add onto conversation history
+
+      // Only initialize if state is not already active
+      if (this.state.conversation !== "active") {
+        // Generate new time stamp
+        const DATE_OPTIONS = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+        const date = new Date();
+        const new_timeStamp = date.toLocaleDateString('en-US', DATE_OPTIONS);
+        this.setState({
+          conversation: "active",
+          timeStamp: new_timeStamp,
+          currentDialogue: [] // TODO: update this from server.js
+        });
+      }
+      else {
+        // Append to current dialogue latest messages
+        this.setState({
+          currentDialogue: [] 
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
     this.socket.close();
   }
-
-  // TODO: May move this function to componentdidmount or call it in componentdidmount
-  // Socket function that listens to changes in a text file
-  listenConversation() {
-    // TODO: First set state to "active" conversation if not already active
-    // TODO: Append to the current dialogue state
-  }
-  
-
-
-  /*
-    In active conversation, I must be able to append to the currentDialogue array in App.jsx
-    when new dialogue gets added into the .txt file
-  */
 
   // When old conversation was selected
   changeConversation(new_timeStamp) {
@@ -84,9 +101,7 @@ class App extends Component {
   // Save current conversation
   saveConversation() {
     // Retrieve time stamp
-    const DATE_OPTIONS = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-    const date = new Date();
-    const new_timeStamp = date.toLocaleDateString('en-US', DATE_OPTIONS);
+    const new_timeStamp = this.state.timeStamp;
     // Submit POST request
     fetch('/conversation', {
       headers: {
@@ -100,8 +115,9 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(dialogue => {
-        // Update conversation history with newest time stamp addition
+        // Update conversation history to include newest time stamp addition
         // TODO: test to make sure latest conversation gets pushed to the top of the History sidebar
+        // TODO: Make sure newest time stamp gets pushed into the hash table in server.js
         let new_conversationHistory = this.state.conversationHistory;
         new_conversationHistory.push(new_timeStamp);
         this.setState({

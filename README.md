@@ -89,6 +89,14 @@ sudo service mysql start
 ```
 
 
+## Infrequent Windows Glitch
+If the Node.js server is running properly but the frontend browser is not loading, then you may have to kill all other existing Node.js processes.
+```bash
+ps aux | grep node
+kill -9 PID PID PID
+```
+
+
 ## Scenarios to Consider
 * What if user clicks on past conversation in the middle of an active convseration?
     * Then the user abandoned the current conversation.
