@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
 
-/*
-  Need to trigger when new .txt file exists and then initialize new conversation
-  Must save date string for parent class
-*/
-
 const DATE_OPTIONS = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
 function FormattedDate(props) {
   return (

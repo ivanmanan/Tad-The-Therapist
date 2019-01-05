@@ -20,9 +20,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // NOTE: Windows PowerShell use Windows file path
 // NOTE: WSL use regular file path
-//const FILE_PATH = "/mnt/c/therapist/lcdk/output/";
-const FILE_PATH = "C:\\therapist\\lcdk\\output\\";
-const OUTPUT_FILE = "output.txt";
+const FILE_PATH = "/mnt/c/therapist/lcdk/output/";
+//const FILE_PATH = "C:\\therapist\\lcdk\\output\\";
+const OUTPUT_FILE = FILE_PATH + "output.txt";
 
 /////////////////////////////////////////////////////////////////////
 // MySQL Database
@@ -76,10 +76,10 @@ io.sockets.on('connection', socket => {
 });
 
 // Socket emits new dialogue every time file changes
-watch(FILE_PATH + OUTPUT_FILE, (event, filename) => {
+watch(OUTPUT_FILE, (event, filename) => {
   if (event === 'update') {
     // Read the file and retrieve last two lines
-    const CONVO = FILE_PATH + OUTPUT_FILE;
+    const CONVO = OUTPUT_FILE;
     const contents = fs.readFileSync(CONVO).toString().split("\n");
     const SPEECH_SPEED = 1;
     if (contents.length === 1) {
@@ -135,27 +135,47 @@ app.get('/conversations', (req, res) => {
 });
 
 
-// TODO: Insert into the MySQL database as well as append to the hash table --> this is just Conversations_Cache[key] = value
-// Insert query can retrieve ID number of MySQL table
-// TODO: POST request ends conversation and no new content should be added into dialogue
+// Insert into the MySQL database as well as append to the hash table
 app.post('/conversation', (req, res) => {
-  console.log("Running query...");
+  console.log("\nRunning query...");
   const time_stamp = req.body.time_stamp;
-  const query_one = 'SELECT LAST_INSERT_ID();';
+  const query_one = 'INSERT INTO Conversations (Time_Stamp, File_name) VALUES ("' + time_stamp + '", "TEMP_NULL");';
+  
   console.log(query_one);
-  connection.query(query_one, (err, result, fields) => {
-    // TODO: Work on creating the text file first;  
-    // Need to console.log what result outputs
-    debug(result);
-    // Need to increment last ID by 1 so I can have a new convo text file
-    // Copy the active text file and rename as convo#.txt
-    // Then insert into the MySQL database
-    // Update the hash table
-
-    // First create and/or append text file, then add file name onto query
-    const query_two = 'INSERT INTO Conversations (Time_Stamp, File_Name) VALUES ("';
-    console.log(query_two + '\n');
-    // TODO: POST request sends the same content from the GET request -- maintain data integrity
+  connection.query(query_one, (err_one, result_one, fields) => {
+    try {
+      if (err_one) throw err_one;
+      const append_number = result_one.insertId;
+      const new_file_name = "convo" + append_number + ".txt";
+      const query_two = 'UPDATE Conversations SET File_Name = "' + new_file_name + '" WHERE Time_Stamp="' + time_stamp + '";';
+      console.log(query_two + '\n');
+      connection.query(query_two, (err_two, result_two, fields) => {
+        try {
+          if (err_two) throw err_two;
+          // Copy output.txt and save it as convo#.txt
+          fs.copyFile(OUTPUT_FILE, FILE_PATH + new_file_name, (err) => {
+            if (err) throw err;
+            console.log("New file was created: " + new_file_name);
+          });
+          
+          // Update the hash table
+          Conversations_Cache[time_stamp] = new_file_name;
+          res.end();          
+        }
+        catch(err_two) {
+          console.log("ERROR: " + err_two);
+          res.end();    
+        }
+      })
+    }
+    catch(err_one) {
+      // If error exists, then run query that removes potentially duplicate values in table
+      console.log("ERROR: " + err_one);
+      const query_three = 'DELETE FROM Conversations WHERE File_Name="TEMP_NULL";';
+      connection.query(query_three, () => {
+        res.end();
+      });
+    }
   });
 });
 

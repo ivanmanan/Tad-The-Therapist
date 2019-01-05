@@ -49,10 +49,8 @@ class App extends Component {
     });
 
     this.socket.on('DIALOGUE', data => {
-
-      console.log(data);
-      // TODO: If data.client is an empty string, then don't add onto conversation history
-
+      const tad = data.tad;
+      const client = data.client;
       // Only initialize if state is not already active
       if (this.state.conversation !== "active") {
         // Generate new time stamp
@@ -62,13 +60,16 @@ class App extends Component {
         this.setState({
           conversation: "active",
           timeStamp: new_timeStamp,
-          currentDialogue: [] // TODO: update this from server.js
+          currentDialogue: [tad]
         });
       }
       else {
         // Append to current dialogue latest messages
+        let new_dialogue = this.state.currentDialogue;
+        new_dialogue.push(client);
+        new_dialogue.push(tad);
         this.setState({
-          currentDialogue: [] 
+          currentDialogue: new_dialogue
         });
       }
     });
@@ -97,7 +98,6 @@ class App extends Component {
       });
   }
 
-  // TODO: Test this function using Conversation.jsx and Server.js
   // Save current conversation
   saveConversation() {
     // Retrieve time stamp
@@ -113,18 +113,14 @@ class App extends Component {
         time_stamp: new_timeStamp
       })
     })
-      .then(res => res.json())
-      .then(dialogue => {
+      .then(() => {
         // Update conversation history to include newest time stamp addition
-        // TODO: test to make sure latest conversation gets pushed to the top of the History sidebar
-        // TODO: Make sure newest time stamp gets pushed into the hash table in server.js
         let new_conversationHistory = this.state.conversationHistory;
-        new_conversationHistory.push(new_timeStamp);
+        new_conversationHistory.unshift(new_timeStamp);
         this.setState({
           conversation: "past",
           time_stamp: new_timeStamp,
-          conversationHistory: new_conversationHistory,
-          currentDialogue: dialogue
+          conversationHistory: new_conversationHistory
         });
       });
 }
