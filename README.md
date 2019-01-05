@@ -1,5 +1,5 @@
 # To-Do List
-* Automate npm run build in node.js
+* Display the Web user interface onto a big screen so I can assess the Bootstrap scaling and whether everything will look fine in a bigger screen other than my laptop
 
 # Tad-The-Therapist
 Code for senior design project. The design project was broken down into

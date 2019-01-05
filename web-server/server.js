@@ -9,6 +9,7 @@ const say = require('say');
 const fs = require('fs');
 const watch = require('node-watch');
 const debug = require('./debug');
+const path = require('path');
 
 /////////////////////////////////////////////////////////////////////
 // Configurations
@@ -18,10 +19,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// NOTE: Windows PowerShell use Windows file path
 // NOTE: WSL use regular file path
-const FILE_PATH = "/mnt/c/therapist/lcdk/output/";
-//const FILE_PATH = "C:\\therapist\\lcdk\\output\\";
+// NOTE: Windows PowerShell use Windows file path
+//const FILE_PATH = "/mnt/c/therapist/lcdk/output/";
+const FILE_PATH = "C:\\therapist\\lcdk\\output\\";
 const OUTPUT_FILE = FILE_PATH + "output.txt";
 
 /////////////////////////////////////////////////////////////////////
@@ -49,14 +50,14 @@ let Conversations_Cache = {};
 /////////////////////////////////////////////////////////////////////
 // Start Application
 
-// NOTE: For release, run 'npm run build' in client directory
-//       The site is running on port 3001
-const deploy = false;
+// NOTE: For release, the site is running on port 3001
+const deploy = true;
 if (deploy) {
-  // TODO: Add code that automates the 'npm run build' in client directory
-  //       Afterwards, insert this change into React-Setup repository
-  const path = require('path');
-  app.use(express.static(path.join(__dirname, 'client/build')));
+  // This automates the 'npm run build' in client directory
+  const exec = require('child_process').exec;
+  const child = exec('npm run build --prefix client', (err) => {
+    app.use(express.static(path.join(__dirname, 'client/build')));
+  });
 }
 
 // Set port
