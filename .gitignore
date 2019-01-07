@@ -1,9 +1,10 @@
 bin/
 *.o
 **/node_modules/
-**.log
-**/config.js
+*.log
+*/config.js
 **/build/
-**/.vscode/
+*/.vscode/
 **/output.txt
-**/convo*
+*/convo*
+*/testing*
