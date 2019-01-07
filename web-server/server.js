@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // NOTE: WSL use regular file path
 // NOTE: Windows PowerShell use Windows file path
 //const FILE_PATH = "/mnt/c/therapist/lcdk/output/";
-const FILE_PATH = "C:\\therapist\\lcdk\\output\\";
+const FILE_PATH = "C:\\therapist\\computer\\output\\";
 const OUTPUT_FILE = FILE_PATH + "output.txt";
 
 /////////////////////////////////////////////////////////////////////
