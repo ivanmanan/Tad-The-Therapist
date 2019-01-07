@@ -21,24 +21,7 @@ The `main` program does a trial speech recognition given a `.txt` file from the 
 
 
 ## Web Server
-The developer machine hosts a web server that reads the content of the `.txt` file made by the computer program. The server contains all the speech output responses that are to be played. Moreover, the frontend displays conversation history.
-
-
-### Output Audio Response
-Use data transmitted from the LCDK to output an appropriate speech response. The data is used to pick the correct audio file to play. Likewise, the corresponding `.txt` file that subtitles the audio file will be displayed on the web browser.
-
-Output can be played using a python script that plays the mp3 or wav file. Use omxplayer.
-
-### Web
-Web server is to display conversation history and view previous conversations on a web browser.
-
-Use MySQL database to [store conversation
-history](https://stackoverflow.com/questions/6472233/can-i-store-images-in-mysql). Keep
-conversations as `txt` files and store path names to the
-database. Also date and time of the conversations.
-
-I can also use the MySQL database to store path names of the audio
-files.
+The developer machine hosts a web server that reads the content of the `.txt` file made by the computer program. The server plays the speech output via the `npm` `say.js` package. Moreover, the frontend displays conversation history.
 
 
 ### Frontend: User Interface
@@ -52,13 +35,11 @@ files.
 └── styles.css<br/>
 
 
-## Audio Response
-Playing audio in Windows machine:
-1. If you are using **wsl**, then you must follow [this guide](https://token2shell.com/howto/x410/enabling-sound-in-wsl-ubuntu-let-it-sing/). This guide does not work properly. So just switch to use PowerShell for audio development
-2. If you are using Windows **PowerShell**, then you must follow [this guide](https://www.youtube.com/watch?v=My7im5WIwrQ). For audio development purposes, you must use PowerShell.
+### Audio Response
+You must use Windows **PowerShell** for the `Node.js` server to playback audio on a Windows machine.
 
 
-## Setting Up MySQL on VS Code
+### Setting Up MySQL on VS Code
 Install MySQL via `sudo apt install mysql-server`.
 
 When you initially attempt to run `mysql -u root -p`, you obtain the following error message:
@@ -91,19 +72,18 @@ sudo service mysql start
 ```
 
 
-## Infrequent Windows Glitch
-If the Node.js server is running properly but the frontend browser is not loading, then you may have to kill all other existing Node.js processes.
+### Infrequent Windows Glitch
+If the `Node.js` server is running properly but the frontend browser is not loading, then you may have to kill all other existing `Node.js` processes.
 ```bash
 ps aux | grep node
 kill -9 PID PID PID
 ```
 
 
-## Scenarios to Consider
+### Scenarios to Consider
 * What if user clicks on past conversation in the middle of an active convseration?
     * Then the user abandoned the current conversation.
 * What if the user refreshes in the middle of a conversation?
     * Then the user abandoned the conversation.
 * How do we know when the converation is over?
     * The `.txt` file stops obtaining appended messages. User decides to save conversation or to not save the conversation.
-
