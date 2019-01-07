@@ -3,15 +3,25 @@
 
 # Tad-The-Therapist
 Code for senior design project. The design project was broken down into
-two segments\: the LCDK and the web server.
+three segments\: the LCDK, the computer program, and the web server.
 
 
 ## LCDK
-The LCDK does all the speech signal processing. The LCDK then outputs its speech recognition into a `.txt` file onto the developer machine. The LCDK also determines the appropriate response and appends it into the `.txt` file. The `.txt` file is located in the `/lcdk/output/` folder. The LCDK practically contains its own dictionary.
+The LCDK does all the speech signal processing. The LCDK then outputs its MFCC spectrum into a `.txt` file onto the developer machine. The `.txt` file is located in the `/lcdk/output/` folder.
+
+
+## Computer
+The computer program has both `train` and `main` functionalities. 
+
+
+The `train` program trains a given data set and exports it as `training_set.txt`.
+
+
+The `main` program does a trial speech recognition given a `.txt` file from the LCDK and the `training_set.txt` file from the `train` program. The `main` program does speech recognition via hidden markov models and export the identified speech as a `.txt` file. The computer program also determines an appropriate response and appends it onto the same `.txt` file. The `.txt` file is located in the `/computer/output/` folder.
 
 
 ## Web Server
-The developer machine hosts a web server that reads the content of the `.txt` file. The server contains all the speech output responses that are to be played. Moreover, the frontend displays the entire conversation history.
+The developer machine hosts a web server that reads the content of the `.txt` file made by the computer program. The server contains all the speech output responses that are to be played. Moreover, the frontend displays conversation history.
 
 
 ### Output Audio Response
