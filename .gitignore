@@ -1,10 +1,16 @@
 bin/
-*.o
+*/.vscode/
+
+# Web Server
 **/node_modules/
 *.log
 */config.js
 **/build/
-*/.vscode/
 **/output.txt
 */convo*
 */testing*
+
+# MakeFile Components
+*.o
+*/main
+*/train

@@ -1,0 +1,21 @@
+# Create binary files here
+
+train: train.o
+	$(CC) train.o -o train
+
+main: main.o
+	$(CC) main.o -o main
+
+
+# Create class objects here
+train.o: train.cpp
+	$(CC) -c train.cpp
+
+main.o: main.cpp
+	$(CC) -c main.cpp
+
+
+# make clean
+
+clean:
+   -rm *.o *~ core paper
