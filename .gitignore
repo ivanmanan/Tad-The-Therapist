@@ -14,3 +14,6 @@ bin/
 *.o
 */main
 */train
+
+# Training Set
+**/mozilla_training_set/

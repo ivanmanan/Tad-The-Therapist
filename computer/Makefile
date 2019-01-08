@@ -1,3 +1,8 @@
+CXX=g++
+RM=rm -f
+
+# TODO: Add CPP flag varable here that implements multithreading for the main program
+
 # make
 all: train main
 
@@ -14,4 +19,4 @@ main.o: main.cpp
 
 # make clean
 clean:
-	rm -f *.o main train
+	$(RM) *.o main train
