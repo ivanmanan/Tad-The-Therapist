@@ -10,6 +10,11 @@
 #include <iostream>
 using namespace std;
 
+// Read mp3 files
+void readAudioFile() {
+
+}
+
 int main() {
     cout << "Hello world!" << endl;
 }
