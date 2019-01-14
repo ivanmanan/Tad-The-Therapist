@@ -7,31 +7,91 @@
 
     NOTE: I need to implement class objects and place it onto the MakeFile as well
     NOTE: I need to make the C++ file paths and the Makefile compatible with Windows Powershell
+    NOTE: May need to create another C++ file 
 */
 
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <thread>
+#include <fstream>
+
 using namespace std;
+using namespace this_thread; // sleep_for, sleep_until
+using namespace chrono; // nanoseconds, system_clock, seconds
 
-vector<int> readTrainingFile() {
-    vector<int> temp;
-    return temp;
+// TODO: When project is finalized, run C++ program on WSL and web server on PowerShell
+// NOTE: WSL use regular file path
+// NOTE: Windows PowerShell use Windows file path
+const string LCDK_FILE_PATH = "/mnt/c/therapist/lcdk/";
+//const string LCDK_FILE_PATH = "C:\\therapist\\lcdk\\";
+
+const string START_FILE = LCDK_FILE_PATH + "start.txt";
+const string INPUT_FILE = LCDK_FILE_PATH + "input.txt";
+const string DONE_FILE  = LCDK_FILE_PATH + "done.txt";
+
+
+// Auxilliary function that reads files
+vector<string> readFile(const string FILE_NAME) {
+    // NOTE: If text file contains a single character, then access it via lines[0]
+    vector<string> lines;
+    string new_line;
+
+    ifstream myfile(FILE_NAME);
+
+    if (myfile.is_open()) {
+        while(getline(myfile, new_line)) {
+            lines.push_back(new_line);
+        }
+        myfile.close();
+    }
+    else {
+        cout << "Unable to open file." << endl;
+    }
+    return lines;
 }
 
-vector<int> readLCDK() {
-    vector<int> temp;
-    cout << "HI!"<< endl;
-    return temp;
+
+// Function that reads start.txt file from the LCDK
+string readStartFile() {
+    vector<string> start_line = readFile(START_FILE);
+    // If read file fails, return 0
+    if (start_line.empty()) {
+        return "0";
+    }
+    else {
+        return start_line[0];
+    }
 }
+
 
 int main() {
 
-    // Read text file
-    // I may want to make a vector of class objects
-    // I want to make variables here I guess?
-    // Can pass paramter and return vectors
-    vector<int> training_set = readTrainingFile();
-    vector<int> trial_set = readLCDK();
+
+    bool changeAlert = false;
+
+    // TODO: Must test while loop in powershell
+    // Read lcdk/start.txt if user triggers a therapy session
+    string start = "0";
+    while (1) {
+        start = readStartFile();
+        if (start == "1") {
+            break;
+        }
+        sleep_for(seconds(1));
+    }
+
+    cout << "YAY I GOT OUT OF THE WHILE LOOP WOOHOO!" << endl;
+
+    // Interval read file every 2 seconds
+    // NOTE: Use delay only for printing text; remove delay for final project
+    // TODO: Have a file-watch that detects a binary value
+    // TODO: 
+    while (1) {
+        cout << "Hello world!" << endl;
+        sleep_for(seconds(5));
+    }
+
 
     cout << "Hello world!" << endl;
 }
