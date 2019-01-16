@@ -114,6 +114,6 @@ kill -9 PID PID PID
 **/computer/output/convo#.txt** - Used to store conversation history.<br/>
 
 ## Executing the Program
-LCDK must be run via Code Composer Studio
-C++ computer program must be run in WSL
-Node.js server must be run in Powershell
+LCDK must be run via Code Composer Studio<br/>
+C++ computer program must be run in WSL<br/>
+Node.js server must be run in Powershell<br/>
