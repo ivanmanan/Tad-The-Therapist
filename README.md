@@ -1,13 +1,10 @@
 # To-Do List
 * Display the Web user interface onto a big screen so I can assess the Bootstrap scaling and whether everything will look fine in a bigger screen other than my laptop
 * Consider implementing recurrent neural network in Python if we decided not to use HMM's in C++
-* Research on dynamic time warping
 * Consider using spectrograms instead of MFCC's
-* Figure out how to implement a chatbot using a machine learning method for Tad the Therapist
 * Can develop neural network on my own computer using the mp3 files
-* Switch --- pass first response into the text file
-* C++ program detect file changes constantly
-* Read how to implement an ML method chatbot
+* Implement LCDK button triggering pass first response into the text file
+* Google search how to implement a chatbot with an ML method
 
 # Tad-The-Therapist
 Code for senior design project. The design project was broken down into
@@ -109,9 +106,14 @@ kill -9 PID PID PID
         └── convo#.txt<br/>
 
 
-**/lcdk/start.txt** - Initialize therapy session for C++ program
-**/lcdk/input.txt** - Feature that goes into the neural network
-**/lcdk/done.txt** - Computer program detects if new value in file is different from current value, then reads the new input text file
-**/computer/busy.txt** - LCDK reads this file to trigger button usability based on whehter computer is idle or not
-**/computer/output/output.txt** - Used to display current chat history in web interface.
-**/computer/output/convo#.txt** - Used to store conversation history.
+**/lcdk/start.txt** - Initialize therapy session for C++ program<br/>
+**/lcdk/input.txt** - Feature that goes into the neural network<br/>
+**/lcdk/done.txt** - Computer program detects if new value in file is different from current value, then reads the new input text file<br/>
+**/computer/busy.txt** - LCDK reads this file to trigger button usability based on whehter computer is idle or not<br/>
+**/computer/output/output.txt** - Used to display current chat history in web interface.<br/>
+**/computer/output/convo#.txt** - Used to store conversation history.<br/>
+
+## Executing the Program
+LCDK must be run via Code Composer Studio
+C++ computer program must be run in WSL
+Node.js server must be run in Powershell

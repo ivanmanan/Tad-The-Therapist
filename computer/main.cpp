@@ -36,7 +36,6 @@ vector<string> readFile(const string FILE_NAME) {
     // NOTE: If text file contains a single character, then access it via lines[0]
     vector<string> lines;
     string new_line;
-
     ifstream myfile(FILE_NAME);
 
     if (myfile.is_open()) {
@@ -45,12 +44,10 @@ vector<string> readFile(const string FILE_NAME) {
         }
         myfile.close();
     }
-    else {
-        cout << "Unable to open file." << endl;
-    }
+    // If file does not exist, do nothing
+
     return lines;
 }
-
 
 // Function that reads start.txt file from the LCDK
 string readStartFile() {
@@ -70,7 +67,6 @@ int main() {
 
     bool changeAlert = false;
 
-    // TODO: Must test while loop in powershell
     // Read lcdk/start.txt if user triggers a therapy session
     string start = "0";
     while (1) {
@@ -93,5 +89,6 @@ int main() {
     }
 
 
-    cout << "Hello world!" << endl;
+    cout << "Program stopped." << endl;
+
 }
