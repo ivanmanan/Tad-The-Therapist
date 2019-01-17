@@ -6,9 +6,6 @@ bin/
 *.log
 */config.js
 **/build/
-**/output.txt
-*/convo*
-*/testing*
 
 # MakeFile Components
 *.o
@@ -23,3 +20,11 @@ bin/
 
 # LCDK
 /lcdk/start.txt
+/lcdk/input.txt
+/lcdk/done.txt
+
+# Computer
+/computer/busy.txt
+/computer/NN_values.txt
+/computer/output/output.txt
+/computer/output/convo*
