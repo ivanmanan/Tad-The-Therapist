@@ -9,11 +9,9 @@ using namespace std;
 
 // Auxiliary function that reads files
 vector<string> readFile(const string FILE_NAME) {
-    // NOTE: If text file contains a single character, then access it via lines[0]
     vector<string> lines;
     string new_line;
     ifstream myfile(FILE_NAME);
-
     if (myfile.is_open()) {
         while(getline(myfile, new_line)) {
             lines.push_back(new_line);
@@ -36,17 +34,18 @@ void appendToFile(const string FILE_NAME, const string message) {
 }
 
 
-// Function that reads start.txt file from the LCDK
-bool readCharFile(const string FILE_NAME) {
+// Function that reads single character files from the LCDK
+bool readCharFile(const string FILE_NAME, bool currentValue) {
     vector<string> start_line = readFile(FILE_NAME);
-    // If read file fails, return 0
+    
+    // If read file fails, return false
     if (start_line.empty()) {
-        return false;
+        return currentValue;
     }
     if (start_line[0] == "1") {
         return true;
     }
-    else {
+    if (start_line[0] == "0") {
         return false;
     }
 }
@@ -58,7 +57,6 @@ void startOutputFile(const string FILE_NAME) {
     ofstream ofs;
     ofs.open(FILE_NAME, ofstream::trunc);
     ofs.close();
-
     // Append greeting message to new output.txt
     string message = "Hello. My name is Tad. How can I help you?";
     appendToFile(FILE_NAME, message);

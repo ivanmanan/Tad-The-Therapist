@@ -36,42 +36,48 @@ const string COMPUTER_OUTPUT_FILE = COMPUTER_OUTPUT_PATH + "output.txt";
 
 int main() {
 
-    // Read lcdk/start.txt if user triggers a therapy session
-    bool start = false;
-    while (1) {
-        start = readCharFile(START_FILE);
-        if (start) {
-            break;
+    while(1) {
+        // Read lcdk/start.txt if user triggers a therapy session
+        bool previousStart = readCharFile(START_FILE, false);
+        bool currentStart = readCharFile(START_FILE, false);
+        while(1) {
+            currentStart = readCharFile(START_FILE, currentStart);
+            if (currentStart != previousStart) {
+                break;
+            }
+            // NOTE: Read file every 2 second intervals
+            // NOTE: Use delay only for printing text; remove delay for final project
+            sleep_for(seconds(1));
         }
-        sleep_for(seconds(1));
-    }
 
-    cout << "PROGRAM: User initialized therapy session." << endl;
+        cout << "\nPROGRAM: User initialized therapy session..." << endl;
 
-    // Initialize the computer/output/output.txt file
-    startOutputFile(COMPUTER_OUTPUT_FILE);
+        // Initialize the computer/output/output.txt file
+        startOutputFile(COMPUTER_OUTPUT_FILE);
 
-    cout << "PROGRAM: Tad sent out the first message." << endl;
+        cout << "PROGRAM: Tad sent out the first message." << endl;
 
-    // Interval read file every 2 seconds
-    // NOTE: Use delay only for printing text; remove delay for final project
-     // NOTE: Variables used to detect changes made by the LCDK
-    bool previousChange = false;
-    bool currentChange = false;
-    while (1) {
+        // NOTE: Variables used to detect changes made by the LCDK
+        bool previousChange = readCharFile(DONE_FILE, false);
+        bool currentChange = readCharFile(DONE_FILE, false);
+        while(1) {
+            
+            currentChange = readCharFile(DONE_FILE, currentChange);
 
-        currentChange = readCharFile(DONE_FILE);
+            if (currentChange != previousChange) {
+                previousChange = currentChange;
+                cout << "PROGRAM: LCDK created new inputs." << endl;
+                // Read new neural network inputs
 
-        if (currentChange != previousChange) {
-            previousChange = currentChange;
-            cout << "New file change!" << endl;
-            // Read new neural network inputs
-
+                // TODO: Neural network decides when conversation is over
+                // TODO: When conversation is over, break from while-loop
+                //       and restart conversation again
+                break;
+            }
+            // NOTE: Read file every 2 second intervals
+            // NOTE: Use delay only for printing text; remove delay for final project
+            sleep_for(seconds(1));
         }
-        sleep_for(seconds(5));
+        cout << "PROGRAM: Conversation finished. Listening for new conversation..." << endl;
     }
-
-
-    cout << "Program stopped." << endl;
-
 }
