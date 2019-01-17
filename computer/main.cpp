@@ -20,13 +20,27 @@ using namespace this_thread; // sleep_for, sleep_until
 using namespace chrono; // nanoseconds, system_clock, seconds
 
 
+// TODO: When project is finalized, run C++ program on WSL and web server on PowerShell
+// NOTE: WSL use regular file path
+// NOTE: Windows PowerShell use Windows file path
+const string LCDK_FILE_PATH = "/mnt/c/therapist/lcdk/";
+//const string LCDK_FILE_PATH = "C:\\therapist\\lcdk\\";
+const string COMPUTER_OUTPUT_PATH = "/mnt/c/therapist/computer/output/";
+//const string = "C:\\therapist\\computer\\output\\";
+
+const string START_FILE = LCDK_FILE_PATH + "start.txt";
+const string INPUT_FILE = LCDK_FILE_PATH + "input.txt";
+const string DONE_FILE  = LCDK_FILE_PATH + "done.txt";
+const string COMPUTER_OUTPUT_FILE = COMPUTER_OUTPUT_PATH + "output.txt";
+
+
 int main() {
 
     // Read lcdk/start.txt if user triggers a therapy session
-    string start = "0";
+    bool start = false;
     while (1) {
-        start = readStartFile();
-        if (start == "1") {
+        start = readCharFile(START_FILE);
+        if (start) {
             break;
         }
         sleep_for(seconds(1));
@@ -35,15 +49,25 @@ int main() {
     cout << "PROGRAM: User initialized therapy session." << endl;
 
     // Initialize the computer/output/output.txt file
-    startOutputFile();
+    startOutputFile(COMPUTER_OUTPUT_FILE);
 
     cout << "PROGRAM: Tad sent out the first message." << endl;
 
     // Interval read file every 2 seconds
     // NOTE: Use delay only for printing text; remove delay for final project
-    // TODO: Have a file-watch that detects a binary value
+     // NOTE: Variables used to detect changes made by the LCDK
+    bool previousChange = false;
+    bool currentChange = false;
     while (1) {
-        cout << "Hello world!" << endl;
+
+        currentChange = readCharFile(DONE_FILE);
+
+        if (currentChange != previousChange) {
+            previousChange = currentChange;
+            cout << "New file change!" << endl;
+            // Read new neural network inputs
+
+        }
         sleep_for(seconds(5));
     }
 

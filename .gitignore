@@ -20,3 +20,6 @@ bin/
 
 # Junk
 **/junk/
+
+# LCDK
+/lcdk/start.txt

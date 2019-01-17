@@ -109,7 +109,7 @@ kill -9 PID PID PID
 └── **Web Server**<br/>
 
 **/lcdk/start.txt** - Initialize therapy session for C++ program<br/>
-**/lcdk/input.txt** - Feature that goes into the neural network<br/>
+**/lcdk/input.txt** - Features that goes into the neural network<br/>
 **/lcdk/done.txt** - Computer program detects if new value in file is different from current value, then reads the new input text file<br/>
 **/computer/busy.txt** - LCDK reads this file to trigger button usability based on whehter computer is idle or not<br/>
 **/computer/NN_values.txt** - Values exported by the `training` program to be used by the `main` program for trial runs on its neural network.
