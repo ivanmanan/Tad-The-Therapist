@@ -1,10 +1,11 @@
 # To-Do List
 * Display the Web user interface onto a big screen so I can assess the Bootstrap scaling and whether everything will look fine in a bigger screen other than my laptop
 * Consider implementing recurrent neural network in Python if we decided not to use HMM's in C++
-* Consider using spectrograms instead of MFCC's
 * Can develop neural network on my own computer using the mp3 files
-* Implement LCDK button triggering pass first response into the text file
+* Consider using spectrograms instead of MFCC's
+* Implement LCDK button trigger to pass first response into the text file
 * Google search how to implement a chatbot with an ML method
+
 
 # Tad-The-Therapist
 Code for senior design project. The design project was broken down into
@@ -114,6 +115,6 @@ kill -9 PID PID PID
 **/computer/output/convo#.txt** - Used to store conversation history.<br/>
 
 ## Executing the Program
-LCDK must be run via Code Composer Studio<br/>
-C++ computer program must be run in WSL<br/>
-Node.js server must be run in Powershell<br/>
+**LCDK** must be run via Code Composer Studio<br/>
+**C++ computer program** must be run in WSL<br/>
+**Node.js server** must be run in Powershell to output onto speakers<br/>

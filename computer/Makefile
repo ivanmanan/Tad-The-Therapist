@@ -1,7 +1,9 @@
-CXX=g++
+CXX=g++ 
+VPATH= auxiliary/
 RM=rm -f
 
 # TODO: Add CPP flag varable here that implements multithreading for the main program
+CXXFLAGS=-I auxiliary/
 
 # make
 all: train main
@@ -14,7 +16,7 @@ main: main.o
 # Create class objects here
 train.o: train.cpp
 	$(CXX) -c train.cpp
-main.o: main.cpp
+main.o: main.cpp duplex.h
 	$(CXX) -c main.cpp
 
 # make clean
