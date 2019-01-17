@@ -14,6 +14,7 @@
 #include <chrono>
 #include <thread>
 #include "./auxiliary/duplex.h"
+#include "./auxiliary/conversation.h"
 
 using namespace std;
 using namespace this_thread; // sleep_for, sleep_until
@@ -68,11 +69,12 @@ int main() {
                 previousChange = currentChange;
                 cout << "PROGRAM: LCDK created new inputs." << endl;
                 // Read new neural network inputs
-
-                // TODO: Neural network decides when conversation is over
-                // TODO: When conversation is over, break from while-loop
+                bool finishConversation = conversate(INPUT_FILE);
+                // NOTE: When conversation is over, break from while-loop
                 //       and restart conversation again
-                break;
+                if (finishConversation) {
+                    break;
+                }
             }
             // NOTE: Read file every 2 second intervals
             // NOTE: Use delay only for printing text; remove delay for final project

@@ -16,7 +16,7 @@ main: main.o
 # Create class objects here
 train.o: train.cpp
 	$(CXX) -c train.cpp
-main.o: main.cpp duplex.h
+main.o: main.cpp duplex.h conversation.h
 	$(CXX) -c main.cpp
 
 # make clean
