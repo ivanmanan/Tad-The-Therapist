@@ -20,10 +20,10 @@ The LCDK does all the speech signal processing. The LCDK then outputs its MFCC s
 The computer program has both `train` and `main` functionalities. 
 
 
-The `train` program trains a given data set and exports it as `training_set.txt`.
+The `train` program trains a given data set and exports it as `NN_values.txt`.
 
 
-The `main` program does a trial speech recognition given a `.txt` file from the LCDK and the `training_set.txt` file from the `train` program. The `main` program does speech recognition via hidden markov models and export the identified speech as a `.txt` file. The computer program also determines an appropriate response and appends it onto the same `.txt` file. The `.txt` file is located in the `/computer/output/` folder.
+The `main` program does a trial speech recognition given a `.txt` file from the LCDK and the `NN_values.txt` file from the `train` program. The `main` program does speech recognition via hidden markov models and export the identified speech as a `.txt` file. The computer program also determines an appropriate response and appends it onto the same `.txt` file. The `.txt` file is located in the `/computer/output/` folder.
 
 
 ## Web Server
@@ -101,16 +101,18 @@ kill -9 PID PID PID
 │   ├── input.txt<br/>
 │   └── done.txt<br/>
 └── **computer**<br/>
-    ├── busy.txt<br/>
-    └── **output**<br/>
-        ├── output.txt<br/>
-        └── convo#.txt<br/>
-
+│   ├── busy.txt<br/>
+│   ├── NN_values.txt<br/>
+│   └── **output**<br/>
+│       ├── output.txt<br/>
+│       └── convo#.txt<br/>
+└── **Web Server**<br/>
 
 **/lcdk/start.txt** - Initialize therapy session for C++ program<br/>
 **/lcdk/input.txt** - Feature that goes into the neural network<br/>
 **/lcdk/done.txt** - Computer program detects if new value in file is different from current value, then reads the new input text file<br/>
 **/computer/busy.txt** - LCDK reads this file to trigger button usability based on whehter computer is idle or not<br/>
+**/computer/NN_values.txt** - Values exported by the `training` program to be used by the `main` program for trial runs on its neural network.
 **/computer/output/output.txt** - Used to display current chat history in web interface.<br/>
 **/computer/output/convo#.txt** - Used to store conversation history.<br/>
 
