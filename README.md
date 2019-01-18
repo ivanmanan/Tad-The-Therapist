@@ -5,7 +5,11 @@
 * Consider using spectrograms instead of MFCC's
 * Implement LCDK button trigger to pass first response into the text file
 * Google search how to implement a chatbot with an ML method
-* Computer program must implement busy.txt file and LCDK must read the busy.txt file
+* Computer program must implement busy.txt file
+* LCDK
+    * LCDK must read the busy.txt file
+    * LCDK must be able to read busy.txt file from computer
+    * LCDK must write "done.txt" and "input.txt" files
 
 
 # Tad-The-Therapist
@@ -112,7 +116,7 @@ kill -9 PID PID PID
 **/lcdk/start.txt** - Initialize therapy session for C++ program<br/>
 **/lcdk/input.txt** - Features that goes into the neural network<br/>
 **/lcdk/done.txt** - Computer program detects if new value in file is different from current value, then reads the new input text file<br/>
-**/computer/busy.txt** - LCDK reads this file to trigger button usability based on whehter computer is idle or not<br/>
+**/computer/busy.txt** - LCDK reads this file to trigger button usability based on whether computer is idle or not. 0 means idle, 1 means busy.<br/>
 **/computer/NN_values.txt** - Values exported by the `training` program to be used by the `main` program for trial runs on its neural network.
 **/computer/output/output.txt** - Used to display current chat history in web interface.<br/>
 **/computer/output/convo#.txt** - Used to store conversation history.<br/>

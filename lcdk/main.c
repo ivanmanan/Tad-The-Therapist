@@ -2,9 +2,10 @@
 #include "L138_LCDK_switch_led.h"
 #include "evmomapl138_gpio.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <math.h>
 #include <ti/dsplib/dsplib.h>
-
+#include <string.h>
 
 
 #define PI 3.14159265358979323
@@ -34,7 +35,7 @@ int samp_ctr = 0; //iterates through clock cycles
 int call_compute = 0; //flag that tells main to run computation
 int pc_busy = 0; //=1 when computer is busy running HMMs
 int mfcc_file_flag = 0; //tracks when to call fopen on the MFCC data file
-
+char init;
 
 int frame_tracker = 0; //track array that is having first half filled
 
@@ -121,155 +122,155 @@ void gen_twiddle_fft_sp (float *w, int n)
 
 
 void get_filter_peaks(){ // get indices of filter peaks and end points
-	int i;
-	for(i = 0; i < 28; ++i){
-		//convert each mel frequency into real frequency and divide by freq_inc to get sample index
-		//filter_peaks[0,27] are the indices of the zeros at the far ends
-		filter_peaks[i] = (int)round(700 * (powf(10,((344 + i * mel_inc)/2595)) - 1) / freq_inc);
-	}
+    int i;
+    for(i = 0; i < 28; ++i){
+        //convert each mel frequency into real frequency and divide by freq_inc to get sample index
+        //filter_peaks[0,27] are the indices of the zeros at the far ends
+        filter_peaks[i] = (int)round(700 * (powf(10,((344 + i * mel_inc)/2595)) - 1) / freq_inc);
+    }
 }
 
 void magnitude_square(){ //take magnitude squared of FFT to get PSD
-	int i = 0;
-	for(i=0; i < frameSize; ++i){
-		PSD_arr[i] = sqrtf(y_sp[2*i]*y_sp[2*i] + y_sp[2*i+1]*y_sp[2*i+1]);
-	}
-	return;
+    int i = 0;
+    for(i=0; i < frameSize; ++i){
+        PSD_arr[i] = sqrtf(y_sp[2*i]*y_sp[2*i] + y_sp[2*i+1]*y_sp[2*i+1]);
+    }
+    return;
 }
 
 void fill_hamming(){ //generate 1024 samples hamming window
-	int i;
-	for(i = 0; i < frameSize; ++i){
-		hamming_window[i] = 0.54 - 0.46 * cosf((2 * PI * i) / (frameSize - 1));
-	}
+    int i;
+    for(i = 0; i < frameSize; ++i){
+        hamming_window[i] = 0.54 - 0.46 * cosf((2 * PI * i) / (frameSize - 1));
+    }
 }
 
 void gen_cos_table(){
-	int m;
-	int k;
+    int m;
+    int k;
 
-	for(m = 1; m < 27; ++m){
-		for (k = 1; k < 14; ++k){
-			cos_table[m-1][k-1] = cosf((m-0.5) * ((float)k*PI/26.0));
-		}
-	}
+    for(m = 1; m < 27; ++m){
+        for (k = 1; k < 14; ++k){
+            cos_table[m-1][k-1] = cosf((m-0.5) * ((float)k*PI/26.0));
+        }
+    }
 }
 
 void compute(){
-	//store fft of input samples in y_sp
-	switch (frame_tracker){
-		case 0 :
-			DSPF_sp_fftSPxSP(frameSize,x_sp2,w_sp,y_sp,brev,4,0,frameSize);
-			magnitude_square(); // store PSD of input in PSD_arr
-			break;
-		case 1 :
-			DSPF_sp_fftSPxSP(frameSize,x_sp0,w_sp,y_sp,brev,4,0,frameSize);
-			magnitude_square(); // store PSD of input in PSD_arr
-			break;
-		case 2 :
-			DSPF_sp_fftSPxSP(frameSize,x_sp1,w_sp,y_sp,brev,4,0,frameSize);
-			magnitude_square(); // store PSD of input in PSD_arr
-			break;
-	}
+    //store fft of input samples in y_sp
+    switch (frame_tracker){
+        case 0 :
+            DSPF_sp_fftSPxSP(frameSize,x_sp2,w_sp,y_sp,brev,4,0,frameSize);
+            magnitude_square(); // store PSD of input in PSD_arr
+            break;
+        case 1 :
+            DSPF_sp_fftSPxSP(frameSize,x_sp0,w_sp,y_sp,brev,4,0,frameSize);
+            magnitude_square(); // store PSD of input in PSD_arr
+            break;
+        case 2 :
+            DSPF_sp_fftSPxSP(frameSize,x_sp1,w_sp,y_sp,brev,4,0,frameSize);
+            magnitude_square(); // store PSD of input in PSD_arr
+            break;
+    }
 
-	int i;
-	int j;
+    int i;
+    int j;
 
-	//inner product of 26 filters with PSD
-	for(i = 1; i < 27; ++i){ //iterate through filter peaks
-		corr = 0;
-		for(j = filter_peaks[i-1]; j < filter_peaks[i]; ++j){ //upslope
-			slope = 1 / (float)(filter_peaks[i] - filter_peaks[i-1]);
-			corr += PSD_arr[j] * (j - filter_peaks[i-1]) * slope;
-		}
-		for(j = filter_peaks[i]; j <= filter_peaks[i+1]; ++j){ //downslope
-			slope = 1 / (float)(filter_peaks[i+1] - filter_peaks[i]);
-			corr += PSD_arr[j] * (filter_peaks[i+1] - j) * slope;
-		}
-		Ym[i-1] = corr; //this Xm = Ym
-	}
+    //inner product of 26 filters with PSD
+    for(i = 1; i < 27; ++i){ //iterate through filter peaks
+        corr = 0;
+        for(j = filter_peaks[i-1]; j < filter_peaks[i]; ++j){ //upslope
+            slope = 1 / (float)(filter_peaks[i] - filter_peaks[i-1]);
+            corr += PSD_arr[j] * (j - filter_peaks[i-1]) * slope;
+        }
+        for(j = filter_peaks[i]; j <= filter_peaks[i+1]; ++j){ //downslope
+            slope = 1 / (float)(filter_peaks[i+1] - filter_peaks[i]);
+            corr += PSD_arr[j] * (filter_peaks[i+1] - j) * slope;
+        }
+        Ym[i-1] = corr; //this Xm = Ym
+    }
 
-	float logVal;
-	//take log of Ym to get Xm
-	for(i = 0; i < 26; ++i){
-		logVal = log10f(Ym[i]);
-		Xm[i] = logVal;
-	}
+    float logVal;
+    //take log of Ym to get Xm
+    for(i = 0; i < 26; ++i){
+        logVal = log10f(Ym[i]);
+        Xm[i] = logVal;
+    }
 
-	//DCT
-	for(i = 0; i < numMFCCs; ++i){ // i=k
-		MFCC_arr[i] = 0;
+    //DCT
+    for(i = 0; i < numMFCCs; ++i){ // i=k
+        MFCC_arr[i] = 0;
 
-		for(j = 0; j < 26; ++j){ // j=m
-			MFCC_arr[i] += Xm[j] * cos_table[j][i];
-		}
-	}
+        for(j = 0; j < 26; ++j){ // j=m
+            MFCC_arr[i] += Xm[j] * cos_table[j][i];
+        }
+    }
 
-	//print MFCCs to a file
-	int pos;
-	for(pos = 0; pos < numMFCCs; ++pos){
-		fprintf(mfcc_data, "%f", MFCC_arr[pos]);
-	}
-	fprintf(mfcc_data, "\n");
+    //print MFCCs to a file
+    int pos;
+    for(pos = 0; pos < numMFCCs; ++pos){
+        fprintf(mfcc_data, "%f", MFCC_arr[pos]);
+    }
+    fprintf(mfcc_data, "\n");
 
 }
 
 interrupt void interrupt4(void) // interrupt service routine
 {
 
-	if (checkbox_record == 1){ //start recording
-			//store audio input in x_sp
-		switch (frame_tracker){
+    if (checkbox_record == 1){ //start recording
+            //store audio input in x_sp
+        switch (frame_tracker){
 
-			case 0:
-				left_sample = input_left_sample();
-				x_sp0[2*samp_ctr] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
-				x_sp0[2*samp_ctr + 1] = 0; //odd index = imag
-				x_sp2[2*samp_ctr + frameSize] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
-				x_sp2[2*samp_ctr + frameSize + 1] = 0; //odd index = imag
-				++samp_ctr;
-				if (samp_ctr == frameSize/2) { //array is full, move to processing
-					samp_ctr = 0;
-					frame_tracker = 1;
-					call_compute = 1;
-				}
-				break;
-			case 1:
-				left_sample = input_left_sample();
-				x_sp1[2*samp_ctr] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
-				x_sp1[2*samp_ctr + 1] = 0; //odd index = imag
-				x_sp0[2*samp_ctr + frameSize] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
-				x_sp0[2*samp_ctr + frameSize + 1] = 0; //odd index = imag
-				++samp_ctr;
-				if (samp_ctr == frameSize/2) {
-					samp_ctr = 0;
-					frame_tracker = 2;
-					call_compute = 1;
-				}
-				break;
-			case 2:
-				left_sample = input_left_sample();
-				x_sp2[2*samp_ctr] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
-				x_sp2[2*samp_ctr + 1] = 0; //odd index = imag
-				x_sp1[2*samp_ctr + frameSize] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
-				x_sp1[2*samp_ctr + frameSize + 1] = 0; //odd index = imag
-				++samp_ctr;
-				if (samp_ctr == frameSize/2) {
-					samp_ctr = 0;
-					frame_tracker = 0;
-					call_compute = 1;
-				}
-				break;
-		}
-	}
-	else { //checkbox_record == 0
-		frame_tracker = 0;
-		samp_ctr = 0;
-		call_compute = 0;
-	}
+            case 0:
+                left_sample = input_left_sample();
+                x_sp0[2*samp_ctr] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
+                x_sp0[2*samp_ctr + 1] = 0; //odd index = imag
+                x_sp2[2*samp_ctr + frameSize] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
+                x_sp2[2*samp_ctr + frameSize + 1] = 0; //odd index = imag
+                ++samp_ctr;
+                if (samp_ctr == frameSize/2) { //array is full, move to processing
+                    samp_ctr = 0;
+                    frame_tracker = 1;
+                    call_compute = 1;
+                }
+                break;
+            case 1:
+                left_sample = input_left_sample();
+                x_sp1[2*samp_ctr] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
+                x_sp1[2*samp_ctr + 1] = 0; //odd index = imag
+                x_sp0[2*samp_ctr + frameSize] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
+                x_sp0[2*samp_ctr + frameSize + 1] = 0; //odd index = imag
+                ++samp_ctr;
+                if (samp_ctr == frameSize/2) {
+                    samp_ctr = 0;
+                    frame_tracker = 2;
+                    call_compute = 1;
+                }
+                break;
+            case 2:
+                left_sample = input_left_sample();
+                x_sp2[2*samp_ctr] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
+                x_sp2[2*samp_ctr + 1] = 0; //odd index = imag
+                x_sp1[2*samp_ctr + frameSize] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
+                x_sp1[2*samp_ctr + frameSize + 1] = 0; //odd index = imag
+                ++samp_ctr;
+                if (samp_ctr == frameSize/2) {
+                    samp_ctr = 0;
+                    frame_tracker = 0;
+                    call_compute = 1;
+                }
+                break;
+        }
+    }
+    else { //checkbox_record == 0
+        frame_tracker = 0;
+        samp_ctr = 0;
+        call_compute = 0;
+    }
 
-	output_left_sample(0);
-	return;
+    output_left_sample(0);
+    return;
 }
 
 /*
@@ -291,81 +292,103 @@ void export_mfcc() {
 }
 */
 
+
+// Function that returns a '0' or '1'
+char readCharFile(const char* FILE_NAME) {
+    FILE* file = fopen(FILE_NAME, "r");
+    return fgetc(file);
+}
+
+// Function that writes into the file a single char value
+void writeCharFile(const char* FILE_NAME, char new_value) {
+    FILE* file = fopen(FILE_NAME, "w");
+    fprintf(file, "%c", new_value);
+    fclose(file);
+}
+
 int main(void)
 {
-	L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_MIC_INPUT);
-	LCDK_GPIO_init();
+    L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_MIC_INPUT);
+    LCDK_GPIO_init();
 
-	get_filter_peaks();
-	fill_hamming();
-	gen_cos_table();
-	gen_twiddle_fft_sp(w_sp, frameSize);
-
-
-	//Initialize Files
-	//////////////////////////////////////////////////////////////
-
-	start = fopen("start.txt", "w");
-	fprintf(start, "%c", "1");
-	fclose(start);
+    get_filter_peaks();
+    fill_hamming();
+    gen_cos_table();
+    gen_twiddle_fft_sp(w_sp, frameSize);
 
 
-	done = fopen("done.txt", "w");
-	fprintf(done, "%c", "0");
-	fclose(done);
+    //////////////////////////////////////////////////////////////
+    //Initialize Files
+
+    // TODO: This function should be triggered when user presses the button to initialize therapy session
+    // Perform bit flip on the lcdk/start.txt file
+    const char* start_file = "start.txt";
+    char init = readCharFile(start_file);
+    if (init == '0'){
+        writeCharFile(start_file, '1');
+    }
+    else {
+        writeCharFile(start_file, '0');
+    }
 
 
-	busy = fopen("busy.txt", "r");
-	//////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
 
-	while (1){
+    while (1){
 
-		if (checkbox_start == 1){
+        if (checkbox_start == 1){
 
-			//check if PC is busy with HMMs
-			FILE * busyTemp = busy;
-			fscanf(busy, "%d", pc_busy);
-			busy = busyTemp; //move pointer back to start of file
-			if(pc_busy == 1){
-				call_compute = 0; //prevent computation and recording
-				checkbox_record = 0;
-			}
+            //check if PC is busy with HMMs
+            FILE * busyTemp = busy;
+            fscanf(busy, "%d", pc_busy);
+            busy = busyTemp; //move pointer back to start of file
+            if(pc_busy == 1){
+                call_compute = 0; //prevent computation and recording
+                checkbox_record = 0;
+            }
 
-			if (mfcc_file_flag == 1) {
-				mfcc_data = fopen("input.txt", "w");
-				mfcc_file_flag = 0;
-			}
+            if (mfcc_file_flag == 1) {
+                mfcc_data = fopen("input.txt", "w");
+                mfcc_file_flag = 0;
+            }
 
-			if(call_compute == 1){ //buffer is filled
-				call_compute = 0;
-				compute();
-			}
-			/*
-			 * if (check for flag from pc){
-			 * 		pc_busy = 1;
-			 * }
-			 * else {
-			 * 		pc_busy = 0;
-			 * }
-			 */
-		}
-		else { //user ended the program
-			checkbox_record = 0;
-			start = fopen("start.txt", "w");
-			fprintf(start, "%c", "0");
-			fclose(start);
+            if(call_compute == 1){ //buffer is filled
+                call_compute = 0;
+                compute();
+            }
+            /*
+             * if (check for flag from pc){
+             *      pc_busy = 1;
+             * }
+             * else {
+             *      pc_busy = 0;
+             * }
+             */
+        }
+        /*
 
-			done = fopen("done.txt", "w");
-			fprintf(done, "%c", "0");
-			fclose(done);
+        else { //user ended the program
+            // TODO: Do not initialize as 0, but rather do a bit flip on start.txt
+            // TODO: The only file where bit flip matters is the computer/busy.txt
+            //       0 means computer is idle, 1 means computer is busy
+            checkbox_record = 0;
+            start = fopen("start.txt", "w");
+            fprintf(start, "%c", "0");
+            fclose(start);
 
-			fclose(busy);
-			fclose(mfcc_data);
 
-			frame_tracker = 0;
-			samp_ctr = 0;
-			call_compute = 0;
-		}
+            done = fopen("done.txt", "w");
+            fprintf(done, "%c", "0");
+            fclose(done);
 
-	}
+            fclose(busy);
+            fclose(mfcc_data);
+
+            frame_tracker = 0;
+            samp_ctr = 0;
+            call_compute = 0;
+        }
+        */
+
+    }
 }

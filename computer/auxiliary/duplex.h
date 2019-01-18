@@ -58,7 +58,7 @@ void startOutputFile(const string FILE_NAME) {
     ofs.open(FILE_NAME, ofstream::trunc);
     ofs.close();
     // Append greeting message to new output.txt
-    string message = "Hello. My name is Tad. How can I help you?";
+    string message = "Hello my name is Tad, how can I help you?";
     appendToFile(FILE_NAME, message);
 }
 
