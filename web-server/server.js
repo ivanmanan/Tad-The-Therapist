@@ -82,7 +82,7 @@ watch(OUTPUT_FILE, (event, filename) => {
     // Read the file and retrieve last two lines
     const CONVO = OUTPUT_FILE;
     const contents = fs.readFileSync(CONVO).toString().split("\n");
-    const SPEECH_SPEED = 1;
+    const SPEECH_SPEED = 1.25;
     if (contents.length === 1) {
       // This is initializing the conversation
       const tad = contents[0];
