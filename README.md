@@ -5,6 +5,7 @@
 * Consider using spectrograms instead of MFCC's
 * Implement LCDK button trigger to pass first response into the text file
 * Google search how to implement a chatbot with an ML method
+* Computer program must implement busy.txt file and LCDK must read the busy.txt file
 
 
 # Tad-The-Therapist

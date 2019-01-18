@@ -33,6 +33,7 @@ const string START_FILE = LCDK_FILE_PATH + "start.txt";
 const string INPUT_FILE = LCDK_FILE_PATH + "input.txt";
 const string DONE_FILE  = LCDK_FILE_PATH + "done.txt";
 const string COMPUTER_OUTPUT_FILE = COMPUTER_OUTPUT_PATH + "output.txt";
+const string COMPUTER_BUSY_FILE = COMPUTER_OUTPUT_PATH + "busy.txt";
 
 
 int main() {
@@ -69,7 +70,7 @@ int main() {
                 previousChange = currentChange;
                 cout << "PROGRAM: LCDK created new inputs." << endl;
                 // Read new neural network inputs
-                bool finishConversation = conversate(INPUT_FILE);
+                bool finishConversation = conversate(INPUT_FILE, COMPUTER_BUSY_FILE);
                 // NOTE: When conversation is over, break from while-loop
                 //       and restart conversation again
                 if (finishConversation) {

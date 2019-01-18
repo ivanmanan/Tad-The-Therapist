@@ -1,7 +1,3 @@
-/*
-Main code that goes onto the LCDK
-*/
-
 #include "L138_LCDK_aic3106_init.h"
 #include "L138_LCDK_switch_led.h"
 #include "evmomapl138_gpio.h"

@@ -1,5 +1,5 @@
-#ifndef CONVERSATION_H
-#define CONVERSATION_H
+#ifndef CHATBOT_H
+#define CHATBOT_H
 
 
 // NOTE: May need to create a data structure to keep track of conversation history

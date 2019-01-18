@@ -3,11 +3,15 @@
 
 #include <vector>
 #include <string>
-#include "duplex.h" // need to be used to read files
+#include "duplex.h"
 
 using namespace std;
 
-bool conversate(const string INPUT_FILE_NAME) {
+bool conversate(const string INPUT_FILE_NAME, const string BUSY_FILE_NAME) {
+
+    // Computer is in busy state
+    // TODO: Implement busy.txt file with single character "0"
+    //writeBusyFile(BUSY_FILE_NAME, "1");
 
     // Read the file
     vector<string> inputs = readFile(INPUT_FILE_NAME);
@@ -29,6 +33,10 @@ bool conversate(const string INPUT_FILE_NAME) {
     //if(finishConversation(Tad_message)) {
         // return true;    
     //}
+
+    // Computer is not in busy state
+    // TODO: Update busy.txt file with single character "1"
+    //writeBusyFile(BUSY_FILE_NAME, "0");
 
     return false;
 }
