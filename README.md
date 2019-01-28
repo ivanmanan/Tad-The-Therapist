@@ -21,10 +21,10 @@ The LCDK does all the speech signal processing. The LCDK then outputs its MFCC s
 The computer program has both `train` and `main` functionalities. 
 
 
-The `train` program trains a given data set and exports it as `NN_values.txt`.
+The `train` program trains a given data set and tests the `chatbot.cpp`.
 
 
-The `main` program does a trial speech recognition given a `.txt` file from the LCDK and the `NN_values.txt` file from the `train` program. The `main` program does speech recognition via hidden markov models and export the identified speech as a `.txt` file. The computer program also determines an appropriate response and appends it onto the same `.txt` file. The `.txt` file is located in the `/computer/output/` folder.
+The `main` program does a trial speech recognition given a `.txt` file from the LCDK. The `main` program does speech recognition via hidden markov models and export the identified speech as a `.txt` file. The computer program also determines an appropriate response and appends it onto the same `.txt` file. The `.txt` file is located in the `/computer/output/` folder.
 
 
 ## Web Server
