@@ -16,9 +16,9 @@ bool conversate(const string INPUT_FILE_NAME, const string BUSY_FILE_NAME) {
     // Read the file
     vector<string> inputs = readFile(INPUT_FILE_NAME);
 
-    // Feed into neural network (or HMM)
-    // TODO: This function gets written in neural_network.h
-    //string client_message = neural_network(inputs);
+    // Feed into HMM
+    // TODO: This function gets written in hmm.h
+    //string client_message = hmm(inputs);
 
     // Tad picks appropriate response to client message
     // TODO: This function gets written in chatbot.h

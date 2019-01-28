@@ -1,20 +1,23 @@
-/*
-    Code that trains data set
-    Can implement some form of multithreading to process everything faster
-    This program produces a text file with all the data set
-
-    NOTE: I need to implement class objects and place it onto the MakeFile as well
-    NOTE: Need to read audio files; can store a text file with list of wav file names
-*/
-
 #include <iostream>
+#include <string>
+#include "Chatbot.h"
+
 using namespace std;
 
-// Read mp3 files
-void readAudioFile() {
-
-}
-
 int main() {
-    cout << "Hello world!" << endl;
+	Chatbot Tad;    // Create a learner object
+
+	cout << "Tad: Hi, my name is Tad, how can I help you today?";
+	/*
+		The following is the main loop. It will continue until the application is closed.
+		The user enters their input, and then the learner will respond.
+	*/
+	for (;;) {
+		cout << "\nUser: ";    // User prompt
+		string phrase;
+		getline(cin, phrase);    // Using getline for multi word input, then store in phrase. 
+
+		cout << "Tad: ";
+		Tad.respond(phrase);    // Pass the user input to the learner and see if he can respond
+	}
 }
