@@ -11,6 +11,7 @@ bin/
 *.o
 */main
 */train
+*/chat
 
 # Training Set
 **/mozilla_training_set/

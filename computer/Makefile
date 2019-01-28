@@ -6,14 +6,18 @@ RM=rm -f
 CXXFLAGS=-I auxiliary/
 
 # make
-all: train main
+all: chat train main
 
+chat: chat.o
+	$(CXX) chat.o -o chat
 train: train.o
 	$(CXX) train.o -o train
 main: main.o
 	$(CXX) main.o -o main
 
 # Create class objects here
+chat.o: chat.cpp
+	$(CXX) -c chat.cpp
 train.o: train.cpp
 	$(CXX) -c train.cpp
 main.o: main.cpp duplex.h conversation.h
@@ -21,4 +25,4 @@ main.o: main.cpp duplex.h conversation.h
 
 # make clean
 clean:
-	$(RM) *.o main train
+	$(RM) *.o chat main train
