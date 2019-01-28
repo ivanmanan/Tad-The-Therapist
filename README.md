@@ -1,10 +1,6 @@
 # To-Do List
 * Display the Web user interface onto a big screen so I can assess the Bootstrap scaling and whether everything will look fine in a bigger screen other than my laptop
-* Consider implementing recurrent neural network in Python if we decided not to use HMM's in C++
-* Can develop neural network on my own computer using the mp3 files
-* Consider using spectrograms instead of MFCC's
 * Implement LCDK button trigger to pass first response into the text file
-* Google search how to implement a chatbot with an ML method
 * Computer program must implement busy.txt file
 * LCDK
     * LCDK must read the busy.txt file
