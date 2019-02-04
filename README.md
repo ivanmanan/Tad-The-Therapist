@@ -6,6 +6,7 @@
     * LCDK must read the busy.txt file
     * LCDK must be able to read busy.txt file from computer
     * LCDK must write "done.txt" and "input.txt" files
+* See specs sheet.
 
 
 # Tad-The-Therapist
