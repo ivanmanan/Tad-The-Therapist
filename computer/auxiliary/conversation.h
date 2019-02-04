@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "duplex.h"
+#include "chatbot.h"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ bool conversate(const string INPUT_FILE_NAME, const string BUSY_FILE_NAME) {
 
     // Tad picks appropriate response to client message
     // TODO: This function gets written in chatbot.h
-    //string Tad_message = TadResponse(client_message);
+    //string Tad_message = respond(client_message);
 
     // Write message into output.txt and Tad's response at once
     // TODO: This function gets written in duplex.h
