@@ -77,11 +77,6 @@ void readLCDK() {
 
         cout << "\nPROGRAM: User initialized therapy session..." << endl;
 
-        // Initialize the computer/output/output.txt file
-        startOutputFile(COMPUTER_OUTPUT_FILE);
-
-        cout << "PROGRAM: Tad sent out the first message." << endl;
-
         // NOTE: Variables used to detect changes made by the LCDK
         bool previousChange = readCharFile(DONE_FILE, false);
         bool currentChange = readCharFile(DONE_FILE, false);
@@ -113,4 +108,6 @@ void readLCDK() {
 int main() {
     // Comment this function out if you do not want to read from the LCDK
     readLCDK();
+
+    // TODO: Create function that runs the training algorithm
 }
