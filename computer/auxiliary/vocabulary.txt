@@ -16,3 +16,11 @@ depressed
 25Saying thanks to the world, and acknowledging your own accomplishments, is a great way to feel good and stay positive.25Life is full of challenges, seen and unseen, so to look and feel great, you must hold your head up each day and project your inner confidence.;25Laugh at yourself. It tones your facial muscles and attitude.;25Most great people have attained their greatest success one step beyond their greatest failure.;
 depression
 25Saying thanks to the world, and acknowledging your own accomplishments, is a great way to feel good and stay positive.25Life is full of challenges, seen and unseen, so to look and feel great, you must hold your head up each day and project your inner confidence.;25Laugh at yourself. It tones your facial muscles and attitude.;25Most great people have attained their greatest success one step beyond their greatest failure.;
+goodbye
+00I am glad to have helped. Good bye!;
+hello
+50Hello! How are you feeling today?;25Salutations! How are doing today?; 25Greetings! How can I help you?;
+hi
+50Hello! How are you feeling today?;25Salutations! How are doing today?; 25Greetings! How can I help you?;
+hey
+50Hello! How are you feeling today?;25Salutations! How are doing today?; 25Greetings! How can I help you?;

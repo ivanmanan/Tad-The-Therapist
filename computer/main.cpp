@@ -12,9 +12,11 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <unordered_map>
 #include <thread>
 #include "./auxiliary/duplex.h"
 #include "./auxiliary/conversation.h"
+#include "./auxiliary/chatbot.h"
 
 using namespace std;
 using namespace this_thread; // sleep_for, sleep_until
@@ -37,6 +39,9 @@ const string COMPUTER_BUSY_FILE = COMPUTER_OUTPUT_PATH + "busy.txt";
 
 
 int main() {
+
+    unordered_map<string, vector<probResponse>> vocabulary = preprocessing();
+
 
     while(1) {
         // Read lcdk/start.txt if user triggers a therapy session
@@ -69,8 +74,8 @@ int main() {
             if (currentChange != previousChange) {
                 previousChange = currentChange;
                 cout << "PROGRAM: LCDK created new inputs." << endl;
-                // Read new neural network inputs
-                bool finishConversation = conversate(INPUT_FILE, COMPUTER_BUSY_FILE);
+                // Read MFCC inputs
+                bool finishConversation = conversate(INPUT_FILE, COMPUTER_BUSY_FILE, vocabulary);
                 // NOTE: When conversation is over, break from while-loop
                 //       and restart conversation again
                 if (finishConversation) {

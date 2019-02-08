@@ -89,18 +89,6 @@ void readVocabularyMap(const unordered_map<string, vector<probResponse>>& vocabu
 	}
 }
 
-
-
-
-/*
-	The following function will look for keywords in the vocabulary file.
-	If there is a match, the accompanying response, stored below the initial phrase,
-	will be outputed.
-	If the response cannot be found, the learner will repeat the phrase, and prompt
-	the user to enter an ideal response. This response will be stored in the vocabulary
-	file along with the initial phrase.
-*/
-
 string respond(const string phrase, const unordered_map<string, vector<probResponse>>& vocabulary_map) {
 	// NOTE: Use this function for reading the hash table
 	//readVocabularyMap(vocabulary_map);
@@ -110,7 +98,6 @@ string respond(const string phrase, const unordered_map<string, vector<probRespo
 		// Iterate through possible responses and select from probabilistic distribution
 		srand (time(NULL));
 		int probability_value = rand() % 100;
-		cout << probability_value << endl;
 		vector<int> probability_distribution;
 		// Find probability in hash table closes to probability value
 		for(auto it = (got->second).begin(); it != (got->second).end(); it++) {
