@@ -106,6 +106,7 @@ void readLCDK() {
 }
 
 int main() {
+    cout << "Hello!" << endl;
     // Comment this function out if you do not want to read from the LCDK
     readLCDK();
 
