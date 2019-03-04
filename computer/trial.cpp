@@ -19,15 +19,12 @@ const string DONE_FILE  = LCDK_FILE_PATH + "done.txt";
 const string COMPUTER_OUTPUT_FILE = COMPUTER_OUTPUT_PATH + "output.txt";
 
 
-bool conversate(const string INPUT_FILE, const string COMPUTER_BUSY_FILE) {
+bool conversate(const string INPUT_FILE) {
     
-    // Read the file with MFCC data from the LCDK
-    //vector<string> inputs = readFile(INPUT_FILE);
-
     // Feed into HMM
     // TODO: This function gets written in hmm.h
     // Give this function the file name
-    string client_message = ml(inputs);
+    string client_message = ml(INPUT_FILE);
 
     cout << "PROGRAM: " << client_message << endl;
 
@@ -75,7 +72,7 @@ void readLCDK() {
                 cout << "PROGRAM: LCDK created new inputs." << endl;
                 
                 // Read new MFCC inputs
-                bool finishConversation = conversate(INPUT_FILE, COMPUTER_BUSY_FILE);
+                bool finishConversation = conversate(INPUT_FILE);
 
                 // NOTE: When conversation is over, break from while-loop
                 //       and restart conversation again

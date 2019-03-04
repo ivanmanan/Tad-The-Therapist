@@ -6,7 +6,7 @@ RM=rm -f
 CXXFLAGS=-I auxiliary/
 
 # make
-all: chat train main
+all: chat train main trial
 
 chat: chat.o
 	$(CXX) chat.o -o chat
@@ -29,4 +29,4 @@ main.o: main.cpp duplex.h conversation.h chatbot.h ml.h
 
 # make clean
 clean:
-	$(RM) *.o chat main train
+	$(RM) *.o chat main train trial
