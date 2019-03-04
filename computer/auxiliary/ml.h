@@ -16,11 +16,11 @@ const double root2pi = sqrt(2 * pi);
 
 
 
-class MeanMFCC
+class State
 {
 public:
-	MeanMFCC(string MFCCs, string StDev);
-	~MeanMFCC();
+	State(string MFCCs, string StDev);
+	~State();
 	vector<double> squareDist(const vector<double>& input) const;
 	vector<double> getStDev() const;
 	double gaussProb(const vector<double>& input) const;
@@ -33,7 +33,7 @@ private:
 };
 
 //string contains the 13 MFCC values, each separated by one space
-MeanMFCC::MeanMFCC(string MFCCs, string StDev) {
+State::State(string MFCCs, string StDev) {
 	size_t sz = 0;
 	size_t sz_start = 0;
 
@@ -51,11 +51,11 @@ MeanMFCC::MeanMFCC(string MFCCs, string StDev) {
 	}
 }
 
-MeanMFCC::~MeanMFCC() {}
+State::~State() {}
 
 
 
-vector<double> MeanMFCC::squareDist(const vector<double>& input) const
+vector<double> State::squareDist(const vector<double>& input) const
 {
 	vector<double> output;
 
@@ -77,7 +77,7 @@ vector<double> MeanMFCC::squareDist(const vector<double>& input) const
 //computes the probability that the input was produced by the state
 //that this corresponds to using a gaussian distribution
 //to simplify, we assume that the distributions of values in each dimension are independent 
-double MeanMFCC::gaussProb(const vector<double>& input) const
+double State::gaussProb(const vector<double>& input) const
 {
 	vector<double> distSquare = squareDist(input);
 
@@ -98,21 +98,23 @@ double MeanMFCC::gaussProb(const vector<double>& input) const
 
 class HMM {
 public:
-	HMM(string word, vector<MeanMFCC> stateOutput, vector<vector<double>> transProb);
+	HMM(string word, vector<State> states, vector<vector<double>> transProb);
 
 	//returns probability that the input was produced by the HMM
-	double prob() const;
+	double prob(const vector<vector<double>>& input) const;
 
 private:
 	string m_word;
 	int m_numStates;
-	vector<MeanMFCC> m_stateOutput;
+	vector<State> m_states;
 	vector<vector<double>> m_transProb;
+
+	double getAlpha(const vector<vector<double>>& input, const int& tailIdx, const int& stateIdx) const;
 };
 
-HMM::HMM(string word, vector<MeanMFCC> stateOutput, vector<vector<double>> transProb) {
+HMM::HMM(string word, vector<State> states, vector<vector<double>> transProb) {
 	m_word = word;
-	m_stateOutput = stateOutput;
+	m_states = states;
 	m_transProb = transProb;
 	m_numStates = transProb.size();
 
@@ -120,13 +122,43 @@ HMM::HMM(string word, vector<MeanMFCC> stateOutput, vector<vector<double>> trans
 	//      transition probability matrix from a file
 }
 
-double HMM::prob() const {
-	double p = 0;
 
-	//TODO: forward algorithm to compute probability of 
-	//the sequence of MFCCs given the HMM for m_phoneme
+//uses forward algorithm to compute probability of the sequence of MFCCs given the HMM for m_phoneme
+double HMM::prob(const vector<vector<double>>& input) const {
+	double p = 0;
+	int tailIdx = input.size() - 1; //vector index of the last entry
+
+	for (int stateIdx = 0; stateIdx < m_numStates; ++stateIdx)
+	{
+		p += getAlpha(input, tailIdx, stateIdx);
+	}
 
 	return p;
+}
+
+//recursive function to calculate alpha in forward algorithm
+double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, const int& stateIdx) const
+{
+	double alpha = 0;
+
+	//base case: if the input size is 1, then alpha is equal to the probability that the 
+	//output corresponds to the initial state 
+	if (tailIdx == 0)
+	{
+		if (stateIdx == 0)
+			return m_states[0].gaussProb(input[0]);
+		//if not initial state, probability is zero
+		else
+			return 0;
+	}
+
+	for (int i = 0; i < m_numStates; ++i)
+	{
+		alpha += getAlpha(input, tailIdx - 1, i) * m_transProb[i][stateIdx];
+	}
+
+	alpha *= m_states[stateIdx].gaussProb(input[tailIdx]);
+	return alpha;
 }
 
 
@@ -144,4 +176,41 @@ string ml(vector<string> computer_input) {
 	return "hello";
 }
 
+vector<double> calcMean(const vector<vector<double>>& clusterMFCCs)
+{
+	vector<double> mean(NUM_MFCCS, 0);
+	double clusterSize = clusterMFCCs.size();
+
+	for (int mfccIdx = 0; mfccIdx < NUM_MFCCS; ++mfccIdx)
+	{
+		for (int clusterIdx = 0; clusterIdx < clusterMFCCs.size(); ++clusterIdx)
+		{
+			mean[mfccIdx] += clusterMFCCs[clusterIdx][mfccIdx];
+		}
+		mean[mfccIdx] /= clusterSize;
+	}
+
+	return mean;
+}
+
+vector<double> calcStDev(const vector<vector<double>>& clusterMFCCs, const vector<double>& meanMFCCs)
+{
+	vector<double> stDev(NUM_MFCCS, 0);
+	double clusterSize = clusterMFCCs.size();
+
+	for (int mfccIdx = 0; mfccIdx < NUM_MFCCS; ++mfccIdx)
+	{
+		double var = 0; //variance = stdev^2
+
+		for (int clusterIdx = 0; clusterIdx < clusterMFCCs.size(); ++clusterIdx)
+		{
+			var += (clusterMFCCs[clusterIdx][mfccIdx] - meanMFCCs[mfccIdx]) * (clusterMFCCs[clusterIdx][mfccIdx] - meanMFCCs[mfccIdx]);
+		}
+
+		var /= clusterSize;
+		stDev[mfccIdx] = sqrt(var);
+	}
+	
+	return stDev;
+}
 #endif
