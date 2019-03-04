@@ -161,21 +161,6 @@ double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, co
 	return alpha;
 }
 
-
-vector<double> convertToNumbers(vector<string> computer_input) {
-	vector<double> mfccs;
-
-	// TODO: Convert strings to doubles
-
-	return mfccs;
-}
-
-string ml(vector<string> computer_input) {
-
-	vector<double> mfccs = convertToNumbers(computer_input);
-	return "hello";
-}
-
 vector<double> calcMean(const vector<vector<double>>& clusterMFCCs)
 {
 	vector<double> mean(NUM_MFCCS, 0);
@@ -213,4 +198,30 @@ vector<double> calcStDev(const vector<vector<double>>& clusterMFCCs, const vecto
 	
 	return stDev;
 }
+
+
+vector<vector<double>> convertToNumbers(string computer_input) {
+	vector<vector<double>> mfccs;
+	// TODO: Convert strings to doubles
+	return mfccs;
+}
+
+/////////////////////////////////////////////////////////////////
+// NOTE: This function may or may not get executed from train.cpp
+
+/////////////////////////////////////////////////////////////////
+// Function that get executed from trial.cpp and main.cpp file
+
+// INPUT: MFCC data text file
+// OUTPUT: Recognized word
+string ml(string computer_input) {
+
+	// TODO: Run trial code here
+	vector<vector<double>> mfccs = convertToNumbers(computer_input);
+	return "hello";
+}
+
+
+
+
 #endif

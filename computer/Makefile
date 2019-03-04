@@ -18,6 +18,8 @@ main: main.o
 # Create class objects here
 chat.o: chat.cpp chatbot.h
 	$(CXX) -c chat.cpp
+trial.o: trial.cpp duplex.h ml.h
+	$(CXX) -c trial.cpp
 train.o: train.cpp duplex.h ml.h
 	$(CXX) -c train.cpp
 main.o: main.cpp duplex.h conversation.h chatbot.h ml.h
