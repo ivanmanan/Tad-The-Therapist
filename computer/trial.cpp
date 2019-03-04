@@ -17,15 +17,10 @@ const string START_FILE = LCDK_FILE_PATH + "start.txt";
 const string INPUT_FILE = LCDK_FILE_PATH + "input.txt";
 const string DONE_FILE  = LCDK_FILE_PATH + "done.txt";
 const string COMPUTER_OUTPUT_FILE = COMPUTER_OUTPUT_PATH + "output.txt";
-const string COMPUTER_BUSY_FILE = COMPUTER_OUTPUT_PATH + "busy.txt";
 
 
 bool conversate(const string INPUT_FILE, const string COMPUTER_BUSY_FILE) {
-
-    // Computer is in busy state
-    // TODO: Implement busy.txt file with single character "0"
-    //writeBusyFile(BUSY_FILE_NAME, "1");
-
+    
     // Read the file with MFCC data from the LCDK
     //vector<string> inputs = readFile(INPUT_FILE);
 
@@ -98,8 +93,5 @@ void readLCDK() {
 
 int main() {
     cout << "Hello!" << endl;
-    // Comment this function out if you do not want to read from the LCDK
     readLCDK();
-
-    // TODO: Create function that runs the training algorithm
 }

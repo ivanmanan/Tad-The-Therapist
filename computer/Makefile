@@ -10,6 +10,8 @@ all: chat train main
 
 chat: chat.o
 	$(CXX) chat.o -o chat
+trial: trial.o
+	$(CXX) trial.o -o trial
 train: train.o
 	$(CXX) train.o -o train
 main: main.o
