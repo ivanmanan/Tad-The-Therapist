@@ -4,24 +4,14 @@
 #include <thread>
 #include "./auxiliary/duplex.h"
 #include "./auxiliary/ml.h"
-/*
-    Used to test HMM's and potentially neural network
-    TODO: Feed a direct line to the lcdk by copying from main.cpp on reading and writing text files
-    TODO: This should only be used for the computer program to print out identified words
-          Hence, there is no chatbot involved here
-*/
 
 using namespace std;
 using namespace this_thread; // sleep_for, sleep_until
 using namespace chrono; // nanoseconds, system_clock, seconds
 
-// TODO: When project is finalized, run C++ program on WSL and web server on PowerShell
-// NOTE: WSL use regular file path
-// NOTE: Windows PowerShell use Windows file path
+// NOTE: When project is finalized, run C++ program on WSL and web server on PowerShell
 const string LCDK_FILE_PATH = "/mnt/c/Users/ivanm/workspace_v8/lcdk/Debug/";
-//const string LCDK_FILE_PATH = "C:\\Users\\ivanm\\workspace_v8\\lcdk\\Debug\\";
 const string COMPUTER_OUTPUT_PATH = "/mnt/c/therapist/computer/output/";
-//const string = "C:\\therapist\\computer\\output\\";
 
 const string START_FILE = LCDK_FILE_PATH + "start.txt";
 const string INPUT_FILE = LCDK_FILE_PATH + "input.txt";

@@ -1,5 +1,7 @@
 sad
 50Why are you sad?;50Sadness flies away on the wings of time.;
+dog
+00I love dogs.;
 happy
 50It is great to hear you are happy!;50It sounds like my job is done. Remember, do not take life too seriously. You’ll never get out of it alive.;
 professor
@@ -13,9 +15,9 @@ sick
 miserable
 50Be miserable or motivate yourself. Whatever has to be done, it is always your choice.;50Happy people find a way to live with their problems, and miserable people let their problems stop them from living.;
 depressed
-25Saying thanks to the world, and acknowledging your own accomplishments, is a great way to feel good and stay positive.25Life is full of challenges, seen and unseen, so to look and feel great, you must hold your head up each day and project your inner confidence.;25Laugh at yourself. It tones your facial muscles and attitude.;25Most great people have attained their greatest success one step beyond their greatest failure.;
+25Saying thanks to the world, and acknowledging your own accomplishments, is a great way to feel good and stay positive.;25Life is full of challenges, seen and unseen, so to look and feel great, you must hold your head up each day and project your inner confidence.;25Laugh at yourself. It tones your facial muscles and attitude.;25Most great people have attained their greatest success one step beyond their greatest failure.;
 depression
-25Saying thanks to the world, and acknowledging your own accomplishments, is a great way to feel good and stay positive.25Life is full of challenges, seen and unseen, so to look and feel great, you must hold your head up each day and project your inner confidence.;25Laugh at yourself. It tones your facial muscles and attitude.;25Most great people have attained their greatest success one step beyond their greatest failure.;
+25Saying thanks to the world, and acknowledging your own accomplishments, is a great way to feel good and stay positive.;25Life is full of challenges, seen and unseen, so to look and feel great, you must hold your head up each day and project your inner confidence.;25Laugh at yourself. It tones your facial muscles and attitude.;25Most great people have attained their greatest success one step beyond their greatest failure.;
 goodbye
 00I am glad to have helped. Good bye!;
 hello
