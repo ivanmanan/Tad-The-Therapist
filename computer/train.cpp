@@ -2,26 +2,31 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <vector>
 #include "./auxiliary/duplex.h"
 #include "./auxiliary/ml.h"
-
 using namespace std;
 
-// NOTE: When project is finalized, run C++ program on WSL and web server on PowerShell
-const string COMPUTER_OUTPUT_PATH = "/mnt/c/therapist/computer/output/";
+const string COMPUTER_TRAINING_PATH = "/mnt/c/therapist/computer/training/";
 
-/*
-const string START_FILE = LCDK_FILE_PATH + "start.txt";
-const string INPUT_FILE = LCDK_FILE_PATH + "input.txt";
-const string DONE_FILE  = LCDK_FILE_PATH + "done.txt";
-*/
+// Training set for the word "cat"
+const string CAT1 = COMPUTER_TRAINING_PATH + "cat1.txt";
+const string CAT2 = COMPUTER_TRAINING_PATH + "cat2.txt";
+const string CAT3 = COMPUTER_TRAINING_PATH + "cat3.txt";
+const string CAT4 = COMPUTER_TRAINING_PATH + "cat4.txt";
+const string CAT5 = COMPUTER_TRAINING_PATH + "cat5.txt";
 
-// TODO: Create multiple files and a file path for training data
+void train(string word) {
 
-const string COMPUTER_OUTPUT_FILE = COMPUTER_OUTPUT_PATH + "output.txt";
+    vector<string> files = {CAT1, CAT2, CAT3, CAT4, CAT5};
 
+    for(auto it = files.begin(); it != files.end(); it++) {
+        cout << *it << endl;
+    }
+
+}
 
 int main() {
-    cout << "Hello!" << endl;
-
+    // Enter string to train
+    train("cat");
 }
