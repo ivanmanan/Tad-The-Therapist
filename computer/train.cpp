@@ -25,6 +25,9 @@ void train(string word, vector<string> files) {
     vector<vector<double>> singleFileData;
     vector<double> singleRowData;
 
+    double max = -99999999;
+    double min =  99999999;
+
     // Read each file and store into array of files with all its MFCC's
     for(auto filePtr = files.begin(); filePtr != files.end(); filePtr++) {
         int fileIndex = distance(files.begin(), filePtr);
@@ -46,9 +49,18 @@ void train(string word, vector<string> files) {
                     int mfccIndex = distance(vstrings.begin(), valuePtr);
                     string valueString = *valuePtr;
                     double value;
+
+                    if (value > max)
+                        max = value;
+                    if (value < min)
+                        min = value;
+
                     stringstream(valueString) >> value;
                     singleRowData.push_back(value);
                 }
+
+
+
                 singleFileData.push_back(singleRowData);
                 singleRowData.clear();
             }
@@ -57,6 +69,14 @@ void train(string word, vector<string> files) {
         singleFileData.clear();
     }
 
+
+    double timeInc = (max - min) / (double)data[0].size();
+    for(int f = 0; f < data.size(); f++) {
+        for (int r = 0; r < data[f].size(); r++) {
+            double timeValue = double(r) * timeInc;
+            data[f][r].push_back(timeValue);
+        }
+    }
 
     // All file data has been loaded onto the 3D array vector<vector<vector<double>>> data;
     for(int f = 0; f < data.size(); f++) {
