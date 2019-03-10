@@ -19,9 +19,9 @@ const string CAT3 = COMPUTER_TRAINING_PATH + "cat3.txt";
 const string CAT4 = COMPUTER_TRAINING_PATH + "cat4.txt";
 const string CAT5 = COMPUTER_TRAINING_PATH + "cat5.txt";
 
-vector<vector<vector<double>>> kmeans(vector<vector<vector<double>>> data) {
+vector<vector<vector<double>>> kmeans(vector<vector<vector<double>>> data, int clusters) {
 
-    vector<vector<vector<double>>> clusters;
+    vector<vector<vector<double>>> clustersData;
 
     for(int f = 0; f < data.size(); f++) {
         cout << "File #" << (f+1) << endl;
@@ -33,12 +33,12 @@ vector<vector<vector<double>>> kmeans(vector<vector<vector<double>>> data) {
         }
     }
 
-    return clusters;
+    return clustersData;
 }
 
 
 
-void train(string word, vector<string> files) {
+void train(string word, vector<string> files, int clusters) {
 
     vector<vector<vector<double>>> data;
     vector<vector<double>> singleFileData;
@@ -113,12 +113,15 @@ void train(string word, vector<string> files) {
     */
 
     // Run the K-means algorithm
-    vector<vector<vector<double>>> clusters = kmeans(data);
+    vector<vector<vector<double>>> clustersData = kmeans(data, clusters);
     
     // Export training set as JSON
 }
 
 int main() {
+
+    // Parameters to modify
+    int clusters = 5;
 
     vector<string> cat = {CAT1, CAT2, CAT3, CAT4, CAT5};
 
@@ -128,6 +131,6 @@ int main() {
 
     auto file = files.begin();
     for(auto word = words.begin(); word != words.end(); word++, file++) {
-        train(*word, *file);
+        train(*word, *file, clusters);
     }
 }
