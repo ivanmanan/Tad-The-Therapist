@@ -89,10 +89,6 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
         vector<vector<vector<double>>> nextClustersData(numClusters);
         vector<vector<double>> nextCentroids;
 
-        vector<vector<double>> init;
-        for (int i = 0; i < numClusters; i++){
-            nextClustersData.push_back(init);
-        }
         //assign each vector to a cluster around the closest centroid
         for (int f = 0; f < clustersData.size(); f++) {
             for (int r = 0; r < clustersData[f].size(); r++) {
