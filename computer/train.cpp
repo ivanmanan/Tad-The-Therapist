@@ -11,18 +11,13 @@
 using namespace std;
 
 const string COMPUTER_TRAINING_PATH = "/mnt/c/therapist/computer/training/";
+const string COMPUTER_WORDS_PATH = "/mnt/c/therapist/computer/words/";
 
-// Training set for the word "cat"
-const string CAT1 = COMPUTER_TRAINING_PATH + "cat1.txt";
-const string CAT2 = COMPUTER_TRAINING_PATH + "cat2.txt";
-const string CAT3 = COMPUTER_TRAINING_PATH + "cat3.txt";
-const string CAT4 = COMPUTER_TRAINING_PATH + "cat4.txt";
-const string CAT5 = COMPUTER_TRAINING_PATH + "cat5.txt";
-
-vector<vector<vector<double>>> kmeans(vector<vector<vector<double>>> data, int clusters) {
+vector<vector<vector<double>>> kmeans(vector<vector<vector<double>>>& data, int clusters) {
 
     vector<vector<vector<double>>> clustersData;
 
+/*
     for(int f = 0; f < data.size(); f++) {
         cout << "File #" << (f+1) << endl;
         for(int r = 0; r < data[f].size(); r++) {
@@ -32,6 +27,7 @@ vector<vector<vector<double>>> kmeans(vector<vector<vector<double>>> data, int c
             cout << endl;
         }
     }
+    */
 
     return clustersData;
 }
@@ -115,10 +111,34 @@ void train(string word, vector<string> files, int clusters) {
     // Run the K-means algorithm
     vector<vector<vector<double>>> clustersData = kmeans(data, clusters);
     
-    // Export training set as JSON
+    // Export training set as text file for that word
+    string word_path = COMPUTER_WORDS_PATH + word + ".txt";
+    
+
+    vector<double> vtest = {1, 2, 3, 4, 5.5, -6};
+    ofstream wordfile(word_path);
+
+    // Need to put vector of numbers in it -- see lcdk process
+    if(wordfile.is_open()) {
+
+        for(auto it = vtest.begin(); it != vtest.end(); it++) {
+            string valueToFile = to_string(*it) + " ";
+            wordfile << valueToFile;
+        }
+        wordfile.close();
+    }
+
+
 }
 
 int main() {
+
+    // Training set for the word "cat"
+    const string CAT1 = COMPUTER_TRAINING_PATH + "cat1.txt";
+    const string CAT2 = COMPUTER_TRAINING_PATH + "cat2.txt";
+    const string CAT3 = COMPUTER_TRAINING_PATH + "cat3.txt";
+    const string CAT4 = COMPUTER_TRAINING_PATH + "cat4.txt";
+    const string CAT5 = COMPUTER_TRAINING_PATH + "cat5.txt";
 
     // Parameters to modify
     int clusters = 5;

@@ -1,4 +1,4 @@
-CXX=g++ 
+CXX=g++
 VPATH= auxiliary/
 RM=rm -f
 
