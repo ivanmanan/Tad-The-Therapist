@@ -191,23 +191,5 @@ vector<vector<double>> convertToNumbers(string computer_input) {
 	return mfccs;
 }
 
-/////////////////////////////////////////////////////////////////
-// Function that get executed from trial.cpp and main.cpp file
-
-// INPUT: MFCC data text file
-// OUTPUT: Recognized word
-string ml(string computer_input) {
-
-	// TODO: Run trial code here
-	vector<vector<double>> mfccs = convertToNumbers(computer_input);
-	
-
-	// TODO: Build HMM's here
-
-	return "hello";
-}
-
-
-
 
 #endif
