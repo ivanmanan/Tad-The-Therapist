@@ -6,11 +6,16 @@
 #include <fstream>
 #include <sstream>
 #include <iterator>
+#include <stdlib.h>
+#include <time.h>
 #include "./auxiliary/duplex.h"
 #include "./auxiliary/ml.h"
 using namespace std;
 
 const string COMPUTER_TRAINING_PATH = "/mnt/c/therapist/computer/training/";
+
+//error threshold for determining convergence of kmeans
+const double errorThresholdSquare = 0.000001;
 
 // Training set for the word "cat"
 const string CAT1 = COMPUTER_TRAINING_PATH + "cat1.txt";
@@ -19,10 +24,118 @@ const string CAT3 = COMPUTER_TRAINING_PATH + "cat3.txt";
 const string CAT4 = COMPUTER_TRAINING_PATH + "cat4.txt";
 const string CAT5 = COMPUTER_TRAINING_PATH + "cat5.txt";
 
-vector<vector<vector<double>>> kmeans(vector<vector<vector<double>>> data, int clusters) {
 
-    vector<vector<vector<double>>> clustersData;
+//calculate square of distance between 2 vectors
+double sqDist(vector<double> centroid, vector<double> point) {
+        if (centroid.size() != point.size())
+            return -1;
 
+        double ans = 0;
+        for (int i = 0; i < centroid.size(); i++)
+        {
+            ans += (centroid[i] - point[i]) * (centroid[i] - point[i]);
+        }
+        return ans;
+}
+
+vector<double> calcMean(const vector<vector<double>>& clusterMFCCs)
+{
+	vector<double> mean(clusterMFCCs[0].size(), 0);
+	double clusterSize = clusterMFCCs.size();
+
+	for (int mfccIdx = 0; mfccIdx < clusterMFCCs[0].size(); ++mfccIdx)
+	{
+		for (int clusterIdx = 0; clusterIdx < clusterMFCCs.size(); ++clusterIdx)
+		{
+			mean[mfccIdx] += clusterMFCCs[clusterIdx][mfccIdx];
+		}
+		mean[mfccIdx] /= clusterSize;
+	}
+
+	return mean;
+}
+
+
+vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data, int numClusters, double min, double max) {
+
+    vector<vector<vector<double>>> clustersData = data;
+    vector<vector<double>> centroids;
+    vector<double> newCentroid(14);
+    vector<double> error(numClusters, 99999);
+    bool keepRunning = true;
+
+
+    ////////////////////////////
+    //initialization
+    ////////////////////////////
+    srand(time(NULL));
+    for (int i = 0; i < numClusters; i++)
+    {
+        //calculate random starting centroids
+        for (int m = 0; m < 14; m++)
+        {
+            double next = (max - min) * ( (double)rand() / (double)RAND_MAX ) + min;
+            newCentroid[m] = next;
+            //cout << newCentroid[m] << " ";
+        }
+        centroids.push_back(newCentroid);
+        /*
+        for (int m = 0; m < 14; m++)
+        {
+            cout << centroids[i][m] << " ";
+        }
+        cout << endl;
+        */
+    }
+
+    ////////////////////////////
+    //iteration
+    ////////////////////////////
+    while (keepRunning) {
+        vector<vector<vector<double>>> nextClustersData(numClusters);
+        vector<vector<double>> nextCentroids(numClusters);
+
+
+        
+        //assign each vector to a cluster around the closest centroid
+        for (int f = 0; f < data.size(); f++) {
+            for (int r = 0; r < clustersData[0].size(); r++) {
+                double minDist = 99999999;
+                int clusterIdx;
+                for (int i = 0; i < centroids.size(); i++) {
+                    double dist = sqDist(centroids[i], clustersData[f][r]);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        clusterIdx = i;
+                    }
+                }
+                nextClustersData[clusterIdx].push_back(data[f][r]);
+            }
+        }
+        
+        //set centroids to the averages of the new clusters
+        for (int i = 0; i < numClusters; i++) {
+            nextCentroids[i] = calcMean(nextClustersData[i]);
+        }
+
+        //calculate error and check for convergence
+        for (int i = 0; i < numClusters; i++) {
+            if (sqDist(nextCentroids[i], centroids[i]) > errorThresholdSquare)
+                break;
+
+            //checks if every centroid meets the convergence requirement
+            if (i == numClusters - 1)
+                keepRunning = false;
+        }
+
+        //update values for next iteration
+        centroids = nextCentroids;
+        clustersData = nextClustersData;
+    }
+
+    
+
+/*
     for(int f = 0; f < data.size(); f++) {
         cout << "File #" << (f+1) << endl;
         for(int r = 0; r < data[f].size(); r++) {
@@ -32,9 +145,10 @@ vector<vector<vector<double>>> kmeans(vector<vector<vector<double>>> data, int c
             cout << endl;
         }
     }
-
+*/
     return clustersData;
 }
+
 
 
 
@@ -113,7 +227,7 @@ void train(string word, vector<string> files, int clusters) {
     */
 
     // Run the K-means algorithm
-    vector<vector<vector<double>>> clustersData = kmeans(data, clusters);
+    vector<vector<vector<double>>> clustersData = kmeans(data, clusters, min, max);
     
     // Export training set as JSON
 }
@@ -133,4 +247,5 @@ int main() {
     for(auto word = words.begin(); word != words.end(); word++, file++) {
         train(*word, *file, clusters);
     }
+    cout << "done" << endl;
 }

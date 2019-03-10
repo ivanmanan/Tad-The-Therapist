@@ -161,22 +161,7 @@ double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, co
 	return alpha;
 }
 
-vector<double> calcMean(const vector<vector<double>>& clusterMFCCs)
-{
-	vector<double> mean(NUM_MFCCS, 0);
-	double clusterSize = clusterMFCCs.size();
 
-	for (int mfccIdx = 0; mfccIdx < NUM_MFCCS; ++mfccIdx)
-	{
-		for (int clusterIdx = 0; clusterIdx < clusterMFCCs.size(); ++clusterIdx)
-		{
-			mean[mfccIdx] += clusterMFCCs[clusterIdx][mfccIdx];
-		}
-		mean[mfccIdx] /= clusterSize;
-	}
-
-	return mean;
-}
 
 vector<double> calcStDev(const vector<vector<double>>& clusterMFCCs, const vector<double>& meanMFCCs)
 {
