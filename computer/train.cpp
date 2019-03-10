@@ -50,13 +50,15 @@ void train(string word, vector<string> files) {
                     string valueString = *valuePtr;
                     double value;
 
-                    if (value > max)
-                        max = value;
-                    if (value < min)
-                        min = value;
-
                     stringstream(valueString) >> value;
                     singleRowData.push_back(value);
+
+                    if (value > max) {
+                        max = value;
+                    }
+                    if (value < min) {
+                        min = value;
+                    }
                 }
 
 
@@ -69,7 +71,7 @@ void train(string word, vector<string> files) {
         singleFileData.clear();
     }
 
-
+    // Add time dimension onto the data set
     double timeInc = (max - min) / (double)data[0].size();
     for(int f = 0; f < data.size(); f++) {
         for (int r = 0; r < data[f].size(); r++) {
@@ -88,6 +90,11 @@ void train(string word, vector<string> files) {
             cout << endl;
         }
     }
+
+    // Run the K-means algorithm
+
+    
+    // Export training set as JSON
 }
 
 int main() {
