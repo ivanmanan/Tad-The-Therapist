@@ -28,10 +28,6 @@ bool conversate(const string INPUT_FILE) {
 
     cout << "PROGRAM: " << client_message << endl;
 
-    // Computer is not in busy state
-    // TODO: Update busy.txt file with single character "1"
-    //writeBusyFile(BUSY_FILE_NAME, "0");
-
     if(client_message != "goodbye") {
         return true;
     }

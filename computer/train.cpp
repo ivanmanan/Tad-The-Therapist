@@ -244,7 +244,7 @@ void train(string word, vector<string> files, int clusters) {
     vector<double> vtest = {1, 2, 3, 4, 5.5, -6};
     ofstream wordfile(word_path);
 
-    // Need to put vector of numbers in it -- see lcdk process
+    // Need to adjust based on the number of states
     if(wordfile.is_open()) {
 
         for(auto it = vtest.begin(); it != vtest.end(); it++) {

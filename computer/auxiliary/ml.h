@@ -192,9 +192,6 @@ vector<vector<double>> convertToNumbers(string computer_input) {
 }
 
 /////////////////////////////////////////////////////////////////
-// NOTE: This function may or may not get executed from train.cpp
-
-/////////////////////////////////////////////////////////////////
 // Function that get executed from trial.cpp and main.cpp file
 
 // INPUT: MFCC data text file
@@ -203,6 +200,10 @@ string ml(string computer_input) {
 
 	// TODO: Run trial code here
 	vector<vector<double>> mfccs = convertToNumbers(computer_input);
+	
+
+	// TODO: Build HMM's here
+
 	return "hello";
 }
 
