@@ -163,26 +163,7 @@ double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, co
 
 
 
-vector<double> calcStDev(const vector<vector<double>>& clusterMFCCs, const vector<double>& meanMFCCs)
-{
-	vector<double> stDev(NUM_MFCCS, 0);
-	double clusterSize = clusterMFCCs.size();
 
-	for (int mfccIdx = 0; mfccIdx < NUM_MFCCS; ++mfccIdx)
-	{
-		double var = 0; //variance = stdev^2
-
-		for (int clusterIdx = 0; clusterIdx < clusterMFCCs.size(); ++clusterIdx)
-		{
-			var += (clusterMFCCs[clusterIdx][mfccIdx] - meanMFCCs[mfccIdx]) * (clusterMFCCs[clusterIdx][mfccIdx] - meanMFCCs[mfccIdx]);
-		}
-
-		var /= clusterSize;
-		stDev[mfccIdx] = sqrt(var);
-	}
-	
-	return stDev;
-}
 
 
 vector<vector<double>> convertToNumbers(string computer_input) {

@@ -34,6 +34,12 @@ double sqDist(vector<double> centroid, vector<double> point) {
 
 vector<double> calcMean(const vector<vector<double>>& clusterMFCCs)
 {
+    //returns an empty vector if passed an empty vector
+    if (clusterMFCCs.empty()) {
+        vector<double> emptyVec;
+        return emptyVec;
+    }
+
 	vector<double> mean(clusterMFCCs[0].size(), 0);
 	double clusterSize = clusterMFCCs.size();
 
@@ -47,6 +53,50 @@ vector<double> calcMean(const vector<vector<double>>& clusterMFCCs)
 	}
 
 	return mean;
+}
+
+vector<double> calcStDev(const vector<vector<double>>& clusterMFCCs, const vector<double>& meanMFCCs)
+{
+    //returns an empty vector if passed an empty vector
+    if (clusterMFCCs.empty() || meanMFCCs.empty()) {
+        vector<double> emptyVec;
+        return emptyVec;
+    }
+
+	vector<double> stDev(NUM_MFCCS, 0);
+	double clusterSize = clusterMFCCs.size();
+
+	for (int mfccIdx = 0; mfccIdx < NUM_MFCCS; ++mfccIdx)
+	{
+		double var = 0; //variance = stdev^2
+
+		for (int clusterIdx = 0; clusterIdx < clusterMFCCs.size(); ++clusterIdx)
+		{
+			var += (clusterMFCCs[clusterIdx][mfccIdx] - meanMFCCs[mfccIdx]) * (clusterMFCCs[clusterIdx][mfccIdx] - meanMFCCs[mfccIdx]);
+		}
+
+		var /= clusterSize;
+		stDev[mfccIdx] = sqrt(var);
+	}
+	
+	return stDev;
+}
+
+//returns true if v1 should come before v2
+//used for sorting the clusters
+bool compareVecs(const vector<double>& v1, const vector<double>& v2)
+{
+    if (v1.empty() && v2.empty())
+        return true;
+    else if (v1.empty())
+        return false;
+    else if (v2.empty())
+        return true;
+    else
+    {
+        return v1[13] <= v2[13];
+    }
+    return true;
 }
 
 
@@ -68,7 +118,9 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
         //calculate random starting centroids
         for (int m = 0; m < 14; m++)
         {
-            double next = (max - min) * ( (double)rand() / (double)RAND_MAX ) + min;
+            double newMax = max - ((max - min) * 0.4);
+            double newMin = min + ((max - min) * 0.4);
+            double next = (newMax - newMin) * ( (double)rand() / (double)RAND_MAX ) + newMin;
             newCentroid[m] = next;
             //cout << newCentroid[m] << " ";
         }
@@ -106,17 +158,18 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
         }
         
         for (int f = 0; f < nextClustersData.size(); f++) {
-            for (int r = 0; r < nextClustersData[f].size(); r++) {
+            cout << nextClustersData[f].size() << endl;
+            /*for (int r = 0; r < nextClustersData[f].size(); r++) {
                 for (int c = 0; c < nextClustersData[f][r].size(); c++) {
                     cout << nextClustersData[f][r][c] << " ";
                 }
                 cout << endl;
-            }
+            }*/
         }
 
         //set centroids to the averages of the new clusters
         for (int i = 0; i < numClusters; i++) {
-            if (!nextClustersData[i].empty) 
+            if (!nextClustersData[i].empty()) 
                 nextCentroids.push_back(calcMean(nextClustersData[i]));
         }
 
@@ -233,6 +286,67 @@ void train(string word, vector<string> files, int clusters) {
     // Run the K-means algorithm
     vector<vector<vector<double>>> clustersData = kmeans(data, clusters, min, max);
     
+    //calculate mean of each cluster
+    //empty clusters will generate empty mean vectors
+    vector<vector<double>> means;
+    for (int i = 0; i < clustersData.size(); i++) {
+        means.push_back(calcMean(clustersData[i]));
+    }
+
+    //calculate standard deviation of each cluster
+    //empty clusters will generate empty stDev vectors
+    vector<vector<double>> stDevs;
+    for (int i = 0; i < clustersData.size(); i++) {
+        stDevs.push_back(calcStDev(clustersData[i], means[i]));
+    }
+  
+    //sort means, stDevs, and clustersData based on temporal order
+    bool stop = false;
+    while (!stop)
+    {
+        stop = true;
+        for (int i = 0; i < means.size() - 1; i++)
+        {
+            //check means[i] <= means[i+1]
+            if (!compareVecs(means[i], means[i+1])) {
+                stop = false;
+                vector<double> temp = means[i];
+                means[i] = means[i+1];
+                means[i+1] = temp;
+                temp = stDevs[i];
+                stDevs[i] = stDevs[i+1];
+                stDevs[i+1] = temp;
+                vector<vector<double>> temp2 = clustersData[i];
+                clustersData[i] = clustersData[i+1];
+                clustersData[i+1] = temp2;
+            }
+        }
+    }
+ 
+    //generate transition probability matrix
+    vector<vector<double>> transProb;
+    int totalSamples = data.size() * data[0].size();
+    for (int i = 0; i < clustersData.size(); i++) {
+        vector<double> row(clustersData.size());
+        if (!clustersData[i].empty()) {
+            if (clustersData[i+1].empty() || i == clustersData.size() - 1)
+                row[i] = 1;
+            else {
+                row[i] = ((double)clustersData[i].size() - 1) / (double)clustersData[i].size();
+                row[i+1] = 1 - row[i];
+            }
+        }
+        transProb.push_back(row);
+    }
+
+    for (int r = 0; r < transProb.size(); r++) {
+        for (int c = 0; c < transProb[r].size(); c++){
+            cout << transProb[r][c] << " ";
+        }
+        cout << endl;
+    }
+
+
     // Export training set as text file for that word
     string word_path = COMPUTER_WORDS_PATH + word + ".txt";
     
