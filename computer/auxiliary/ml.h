@@ -100,8 +100,11 @@ class HMM {
 public:
 	HMM(string word, vector<State> states, vector<vector<double>> transProb);
 
-	//returns probability that the input was produced by the HMM
+	// Returns probability that the input was produced by the HMM
 	double prob(const vector<vector<double>>& input) const;
+
+	// Returns the word of the HMM
+	string word() const {return m_word;};
 
 private:
 	string m_word;
@@ -162,31 +165,6 @@ double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, co
 }
 
 
-
-
-
-
-vector<vector<double>> convertToNumbers(string computer_input) {
-	vector<vector<double>> mfccs;
-	// TODO: Convert strings to doubles
-	return mfccs;
-}
-
-/////////////////////////////////////////////////////////////////
-// Function that get executed from trial.cpp and main.cpp file
-
-// INPUT: MFCC data text file
-// OUTPUT: Recognized word
-string ml(string computer_input) {
-
-	// TODO: Run trial code here
-	vector<vector<double>> mfccs = convertToNumbers(computer_input);
-	
-
-	// TODO: Build HMM's here
-
-	return "hello";
-}
 
 
 

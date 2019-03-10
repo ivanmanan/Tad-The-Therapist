@@ -2,6 +2,9 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <fstream>
+#include <sstream>
+#include <iterator>
 #include "./auxiliary/duplex.h"
 #include "./auxiliary/ml.h"
 
@@ -11,6 +14,8 @@ using namespace chrono; // nanoseconds, system_clock, seconds
 
 // NOTE: When project is finalized, run C++ program on WSL and web server on PowerShell
 const string LCDK_FILE_PATH = "/mnt/c/Users/ivanm/workspace_v8/lcdk/Debug/";
+const string COMPUTER_WORDS_PATH = "/mnt/c/therapist/computer/words/";
+const string COMPUTER_TRANS_PROB_PATH = "/mnt/c/therapist/computer/transProb/";
 const string COMPUTER_OUTPUT_PATH = "/mnt/c/therapist/computer/output/";
 
 const string START_FILE = LCDK_FILE_PATH + "start.txt";
@@ -18,21 +23,157 @@ const string INPUT_FILE = LCDK_FILE_PATH + "input.txt";
 const string DONE_FILE  = LCDK_FILE_PATH + "done.txt";
 const string COMPUTER_OUTPUT_FILE = COMPUTER_OUTPUT_PATH + "output.txt";
 
+vector<HMM> hmms;
+
+// TODO: Copy and paste this function into main.cpp
+void buildHMMs() {
+
+    // NOTE: Must update this array with every known vocabulary word
+    vector<string> words = {"test"};
+    
+	// Read text files for data to insert into HMM
+    for(auto wordPtr = words.begin(); wordPtr != words.end(); wordPtr++) {
+        string word = *wordPtr;
+        string wordStateFile = COMPUTER_WORDS_PATH + word + ".txt";
+        string wordTransProbFile = COMPUTER_TRANS_PROB_PATH + word + ".txt";
+
+        // Read the text files and store as data structures
+        vector<State> states;
+        vector<vector<double>> transProb;
+        string mfccData;
+        string stdDevData;
+        ifstream stateFile(wordStateFile);
+
+        if(stateFile.is_open()) {
+            // Read MFCC values
+            while(getline(stateFile, mfccData)) {
+                // Read std deviations
+                getline(stateFile, stdDevData);
+
+                // NOTE: State expects 13 values in each vector argument
+                State state(mfccData, stdDevData);
+                states.push_back(state);
+            }
+        }
+
+        // NOTE: transProb must be converted from string to double
+        string prob_line;
+        ifstream transProbFile(wordTransProbFile);
+        vector<double> singleRowData;
+        if(transProbFile.is_open()) {
+            while(getline(transProbFile, prob_line)) {
+                stringstream ss(prob_line);
+                
+                istream_iterator<string> begin(ss);
+                istream_iterator<string> end;
+                vector<string> vstrings(begin, end);
+
+                // Convert string to double
+                for(auto valuePtr = vstrings.begin(); valuePtr != vstrings.end(); valuePtr++) {
+                    string valueString = *valuePtr;
+                    double value;
+
+                    stringstream(valueString) >> value;
+                    singleRowData.push_back(value);
+                }
+                transProb.push_back(singleRowData);
+                singleRowData.clear();
+            }
+        }
+
+        // Feed state objects into HMM
+        HMM hmm(word, states, transProb);
+
+        // DEBUG: Print out states and transition probability
+        /*
+        cout << "WORD: " << word << endl;
+        for(int r = 0; r < transProb.size(); r++) {
+            for(int c = 0; c < transProb[0].size(); c++) {
+                cout << transProb[r][c] << " ";
+            }
+            cout << endl;
+        }
+        */
+
+        hmms.push_back(hmm);
+    }
+    cout << "PROGRAM: Finished building Hidden Markov Models." << endl;
+
+}
+
+// INPUT: MFCC data text file
+// OUTPUT: Recognized word
+string ml(string computer_input) {
+
+    // Take input file and convert to matrix of doubles
+    vector<vector<double>> input;
+    vector<double> singleRowInput;
+    string input_line;
+    ifstream inputFile(computer_input);
+    if(inputFile.is_open()) {
+        while(getline(inputFile, input_line)) {
+            stringstream ss(input_line);
+                
+            istream_iterator<string> begin(ss);
+            istream_iterator<string> end;
+            vector<string> vstrings(begin, end);
+
+            // Convert string to double
+            for(auto valuePtr = vstrings.begin(); valuePtr != vstrings.end(); valuePtr++) {
+                string valueString = *valuePtr;
+                double value;
+
+                stringstream(valueString) >> value;
+                singleRowInput.push_back(value);
+            }
+            input.push_back(singleRowInput);
+            singleRowInput.clear();
+        }
+    }
+
+    /*
+    cout << "PROGRAM: Printing out input matrix." << endl;
+    for(int r = 0; r < input.size(); r++) {
+        for(int c = 0; c < input[0].size(); c++) {
+            cout << input[r][c] << " ";
+        }
+        cout << endl;
+    }
+    */
+
+    double max_probability = 0;
+    string likely_word;
+
+    cout << "Calculating probability..." << endl;
+    // TODO: There is an error with hmm->prob
+
+	// Test the mfcc input to every HMM and return the word with greatest probability
+    for(auto hmm = hmms.begin(); hmm != hmms.end(); hmm++) {
+        string word = hmm->word();
+        double probability = hmm->prob(input);
+        cout << "Probability finished calculating" << endl;
+        if(probability > max_probability) {
+            max_probability = probability;
+            likely_word = word;
+        }
+        cout << word << endl;
+    }
+	return likely_word;
+}
+
 
 bool conversate(const string INPUT_FILE) {
     
     // Feed into HMM
-    // TODO: This function gets written in hmm.h
-    // Give this function the file name
     string client_message = ml(INPUT_FILE);
 
-    cout << "PROGRAM: " << client_message << endl;
+    cout << "USER: " << client_message << endl;
 
     if(client_message != "goodbye") {
-        return true;
+        return false;
     }
     else {
-        return false;
+        return true;
     }
 }
 
@@ -85,6 +226,6 @@ void readLCDK() {
 }
 
 int main() {
-    cout << "Hello!" << endl;
+    buildHMMs();
     readLCDK();
 }
