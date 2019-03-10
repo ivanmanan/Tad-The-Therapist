@@ -87,7 +87,7 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
     ////////////////////////////
     while (keepRunning) {
         vector<vector<vector<double>>> nextClustersData(numClusters);
-        vector<vector<double>> nextCentroids(numClusters);
+        vector<vector<double>> nextCentroids;
 
 
         
@@ -109,7 +109,7 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
         
         //set centroids to the averages of the new clusters
         for (int i = 0; i < numClusters; i++) {
-            nextCentroids[i] = calcMean(nextClustersData[i]);
+            nextCentroids.push_back(calcMean(nextClustersData[i]));
         }
 
         //calculate error and check for convergence
@@ -125,6 +125,8 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
         //update values for next iteration
         centroids = nextCentroids;
         clustersData = nextClustersData;
+
+        keepRunning = false;
     }
 
     
