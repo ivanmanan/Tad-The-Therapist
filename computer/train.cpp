@@ -89,11 +89,13 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
         vector<vector<vector<double>>> nextClustersData(numClusters);
         vector<vector<double>> nextCentroids;
 
-
-        
+        vector<vector<double>> init;
+        for (int i = 0; i < numClusters; i++){
+            nextClustersData.push_back(init);
+        }
         //assign each vector to a cluster around the closest centroid
         for (int f = 0; f < data.size(); f++) {
-            for (int r = 0; r < clustersData[0].size(); r++) {
+            for (int r = 0; r < clustersData[f].size(); r++) {
                 double minDist = 99999999;
                 int clusterIdx;
                 for (int i = 0; i < centroids.size(); i++) {
@@ -107,9 +109,19 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
             }
         }
         
+        for (int f = 0; f < nextClustersData.size(); f++) {
+            for (int r = 0; r < nextClustersData[f].size(); r++) {
+                for (int c = 0; c < nextClustersData[f][r].size(); c++) {
+                    cout << nextClustersData[f][r][c] << " ";
+                }
+                cout << endl;
+            }
+        }
+
         //set centroids to the averages of the new clusters
         for (int i = 0; i < numClusters; i++) {
-            nextCentroids.push_back(calcMean(nextClustersData[i]));
+            //nextCentroids.push_back(calcMean(nextClustersData[i]));
+            //nextCentroids.push_back(calcMean({{0}, {0}}));
         }
 
         //calculate error and check for convergence
