@@ -19,6 +19,25 @@ const string CAT3 = COMPUTER_TRAINING_PATH + "cat3.txt";
 const string CAT4 = COMPUTER_TRAINING_PATH + "cat4.txt";
 const string CAT5 = COMPUTER_TRAINING_PATH + "cat5.txt";
 
+vector<vector<vector<double>>> kmeans(vector<vector<vector<double>>> data) {
+
+    vector<vector<vector<double>>> clusters;
+
+    for(int f = 0; f < data.size(); f++) {
+        cout << "File #" << (f+1) << endl;
+        for(int r = 0; r < data[f].size(); r++) {
+            for(int c = 0; c < data[f][r].size(); c++) {
+                cout << data[f][r][c] << " ";
+            }
+            cout << endl;
+        }
+    }
+
+    return clusters;
+}
+
+
+
 void train(string word, vector<string> files) {
 
     vector<vector<vector<double>>> data;
@@ -81,6 +100,7 @@ void train(string word, vector<string> files) {
     }
 
     // All file data has been loaded onto the 3D array vector<vector<vector<double>>> data;
+    /*
     for(int f = 0; f < data.size(); f++) {
         cout << "File #" << (f+1) << endl;
         for(int r = 0; r < data[f].size(); r++) {
@@ -90,9 +110,10 @@ void train(string word, vector<string> files) {
             cout << endl;
         }
     }
+    */
 
     // Run the K-means algorithm
-
+    vector<vector<vector<double>>> clusters = kmeans(data);
     
     // Export training set as JSON
 }
