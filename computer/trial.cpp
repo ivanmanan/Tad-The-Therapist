@@ -28,18 +28,10 @@ vector<HMM> hmms;
 // TODO: Copy and paste this function into main.cpp
 void buildHMMs() {
 
-    string mfccs1 = "1.1 2.2 3.3 4.4 5.5 6.6 7.7 8.8 9.9 10.1 11.11 12.12 13.13";
-	string stdevs1 = "1 1 1 1 1 1 1 1 1 1 1 1 1";
-    State s1(mfccs1, stdevs1);
-    cout << "IT HAS BEEN DONE!" << endl;
-
     // NOTE: Must update this array with every known vocabulary word
     vector<string> words = {"test"};
     
-    // TODO: Build HMM's here and push into hmms vector
-	// Read text files for data --- the HMM's should be reading from the text file
-    // Read transitional probability matrix from text file
-
+	// Read text files for data to insert into HMM
     for(auto wordPtr = words.begin(); wordPtr != words.end(); wordPtr++) {
         string word = *wordPtr;
         string wordStateFile = COMPUTER_WORDS_PATH + word + ".txt";
@@ -48,14 +40,11 @@ void buildHMMs() {
         // Read the text files and store as data structures
         vector<State> states;
         vector<vector<double>> transProb;
-
         string mfccData;
         string stdDevData;
         ifstream stateFile(wordStateFile);
 
-
         if(stateFile.is_open()) {
-
             // Read MFCC values
             while(getline(stateFile, mfccData)) {
                 // Read std deviations
