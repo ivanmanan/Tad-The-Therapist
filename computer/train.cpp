@@ -14,6 +14,7 @@ using namespace std;
 
 const string COMPUTER_TRAINING_PATH = "/mnt/c/therapist/computer/training/";
 const string COMPUTER_WORDS_PATH = "/mnt/c/therapist/computer/words/";
+const string COMPUTER_TRANS_PROB_PATH = "/mnt/c/therapist/computer/transProb/";
 
 //error threshold for determining convergence of kmeans
 const double errorThresholdSquare = 0.000001;
@@ -347,7 +348,8 @@ void train(string word, vector<string> files, int clusters) {
     }
 
 
-    // Export training set as text file for that word
+    // Export means and stDevs as text file
+    // Export transProb as text file
     string word_path = COMPUTER_WORDS_PATH + word + ".txt";
     
 
