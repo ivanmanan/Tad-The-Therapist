@@ -351,19 +351,38 @@ void train(string word, vector<string> files, int clusters) {
     // Export means and stDevs as text file
     // Export transProb as text file
     string word_path = COMPUTER_WORDS_PATH + word + ".txt";
+    string transProb_path = COMPUTER_TRANS_PROB_PATH + word + ".txt";
     
-
-    vector<double> vtest = {1, 2, 3, 4, 5.5, -6};
     ofstream wordfile(word_path);
 
-    // Need to adjust based on the number of states
+    // Must alternate between rows
     if(wordfile.is_open()) {
 
-        for(auto it = vtest.begin(); it != vtest.end(); it++) {
-            string valueToFile = to_string(*it) + " ";
-            wordfile << valueToFile;
+        for(int r = 0; r < means.size(); r++) {
+            for(int c = 0; c < means[r].size(); c++) {
+                string valueToFile = to_string(means[r][c]) + " ";
+                wordfile << valueToFile;
+            }
+            wordfile << "\n";
+
+            for(int c = 0; c < stDevs[r].size(); c++) {
+                string valueToFile = to_string(stDevs[r][c]) + " ";
+                wordfile << valueToFile;
+            }
+            wordfile << "\n";
         }
-        wordfile.close();
+    }
+
+
+    ofstream transProbFile(transProb_path);
+    if(transProbFile.is_open()) {
+        for(int r = 0; r < transProb.size(); r++) {
+            for(int c = 0; c < transProb[r].size(); c++) {
+                string valueToFile = to_string(transProb[r][c]) + " ";
+                transProbFile << valueToFile;
+            }
+            transProbFile << "\n";
+        }
     }
 
 
