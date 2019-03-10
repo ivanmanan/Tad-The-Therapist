@@ -105,28 +105,75 @@ void buildHMMs() {
 // OUTPUT: Recognized word
 string ml(string computer_input) {
 
-	// TODO: Run trial code here
-	
+    // Take input file and convert to matrix of doubles
+    vector<vector<double>> input;
+    vector<double> singleRowInput;
+    string input_line;
+    ifstream inputFile(computer_input);
+    if(inputFile.is_open()) {
+        while(getline(inputFile, input_line)) {
+            stringstream ss(input_line);
+                
+            istream_iterator<string> begin(ss);
+            istream_iterator<string> end;
+            vector<string> vstrings(begin, end);
 
+            // Convert string to double
+            for(auto valuePtr = vstrings.begin(); valuePtr != vstrings.end(); valuePtr++) {
+                string valueString = *valuePtr;
+                double value;
 
-	return "hello";
+                stringstream(valueString) >> value;
+                singleRowInput.push_back(value);
+            }
+            input.push_back(singleRowInput);
+            singleRowInput.clear();
+        }
+    }
+
+    /*
+    cout << "PROGRAM: Printing out input matrix." << endl;
+    for(int r = 0; r < input.size(); r++) {
+        for(int c = 0; c < input[0].size(); c++) {
+            cout << input[r][c] << " ";
+        }
+        cout << endl;
+    }
+    */
+
+    double max_probability = 0;
+    string likely_word;
+
+    cout << "Calculating probability..." << endl;
+    // TODO: There is an error with hmm->prob
+
+	// Test the mfcc input to every HMM and return the word with greatest probability
+    for(auto hmm = hmms.begin(); hmm != hmms.end(); hmm++) {
+        string word = hmm->word();
+        double probability = hmm->prob(input);
+        cout << "Probability finished calculating" << endl;
+        if(probability > max_probability) {
+            max_probability = probability;
+            likely_word = word;
+        }
+        cout << word << endl;
+    }
+	return likely_word;
 }
 
 
 bool conversate(const string INPUT_FILE) {
     
     // Feed into HMM
-    // TODO: This function gets written in hmm.h
-    // Give this function the file name
     string client_message = ml(INPUT_FILE);
 
-    cout << "PROGRAM: " << client_message << endl;
+    cout << "USER: " << client_message << endl;
 
     if(client_message != "goodbye") {
-        return true;
+        return false;
     }
     else {
-        return false;
+        return true;
     }
 }
 

@@ -100,8 +100,11 @@ class HMM {
 public:
 	HMM(string word, vector<State> states, vector<vector<double>> transProb);
 
-	//returns probability that the input was produced by the HMM
+	// Returns probability that the input was produced by the HMM
 	double prob(const vector<vector<double>>& input) const;
+
+	// Returns the word of the HMM
+	string word() const {return m_word;};
 
 private:
 	string m_word;
@@ -182,13 +185,6 @@ vector<double> calcStDev(const vector<vector<double>>& clusterMFCCs, const vecto
 	}
 	
 	return stDev;
-}
-
-
-vector<vector<double>> convertToNumbers(string computer_input) {
-	vector<vector<double>> mfccs;
-	// TODO: Convert strings to doubles
-	return mfccs;
 }
 
 

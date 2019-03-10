@@ -116,7 +116,7 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
 
         //set centroids to the averages of the new clusters
         for (int i = 0; i < numClusters; i++) {
-            if (!nextClustersData[i].empty) 
+            if (!nextClustersData[i].empty()) 
                 nextCentroids.push_back(calcMean(nextClustersData[i]));
         }
 
