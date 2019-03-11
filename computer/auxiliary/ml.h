@@ -99,7 +99,7 @@ double State::gaussProb(const vector<double>& input) const
 
 	for (int i = 0; i < NUM_MFCCS; ++i)
 	{
-		result *= (1 / (root2pi * m_StDev[i])) * exp((-1) * distSquare[i] / (2 * m_StDev[i] * m_StDev[i]));
+		result *= (2000000000000000 / (root2pi * m_StDev[i])) * exp((-1) * distSquare[i] / (2 * m_StDev[i] * m_StDev[i]));
 	}
 
 	return result;

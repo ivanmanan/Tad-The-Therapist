@@ -360,6 +360,7 @@ void train(string word, vector<string> files, int clusters) {
     // Must alternate between rows
     if(wordfile.is_open()) {
 
+        /*
         // Read entire 2D vector
         cout << means.size() << endl;
         cout << stDevs.size() << endl;
@@ -379,6 +380,7 @@ void train(string word, vector<string> files, int clusters) {
             }
             cout << endl;
         }
+        */
 
         // NOTE: This is shoddy
         for(int r = 0; r < means.size(); r++) {

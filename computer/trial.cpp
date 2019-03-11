@@ -85,8 +85,8 @@ void buildHMMs() {
         HMM hmm(word, states, transProb);
 
         // DEBUG: Print out states and transition probability
-        hmm.printTransProb();
-        hmm.printStates();
+        //hmm.printTransProb();
+        //hmm.printStates();
 
         hmms.push_back(hmm);
     }
