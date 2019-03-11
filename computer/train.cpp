@@ -159,7 +159,7 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
         }
         
         for (int f = 0; f < nextClustersData.size(); f++) {
-            cout << nextClustersData[f].size() << endl;
+            //cout << nextClustersData[f].size() << endl;
             /*for (int r = 0; r < nextClustersData[f].size(); r++) {
                 for (int c = 0; c < nextClustersData[f][r].size(); c++) {
                     cout << nextClustersData[f][r][c] << " ";
@@ -340,12 +340,14 @@ void train(string word, vector<string> files, int clusters) {
         transProb.push_back(row);
     }
 
+    /*
     for (int r = 0; r < transProb.size(); r++) {
         for (int c = 0; c < transProb[r].size(); c++){
             cout << transProb[r][c] << " ";
         }
         cout << endl;
     }
+    */
 
 
     // Export means and stDevs as text file
@@ -358,18 +360,47 @@ void train(string word, vector<string> files, int clusters) {
     // Must alternate between rows
     if(wordfile.is_open()) {
 
+        // Read entire 2D vector
+        cout << means.size() << endl;
+        cout << stDevs.size() << endl;
+
+        cout << "PRINTING MEANS: " << endl;
         for(int r = 0; r < means.size(); r++) {
             for(int c = 0; c < means[r].size(); c++) {
-                string valueToFile = to_string(means[r][c]) + " ";
-                wordfile << valueToFile;
+                cout << means[r][c] << " ";
             }
-            wordfile << "\n";
+            cout << endl;
+        }
+
+        cout << "PRINTING STD DEVIATIONS: " << endl;
+        for(int r = 0; r < stDevs.size(); r++) {
+            for(int c = 0; c < stDevs[r].size(); c++) {
+                cout << stDevs[r][c] << " ";
+            }
+            cout << endl;
+        }
+
+        // NOTE: This is shoddy
+        for(int r = 0; r < means.size(); r++) {
+            for(int c = 0; c < means[r].size(); c++) {
+                //cout << means[r].size() - 1<< endl;
+                if (c < means[r].size() - 1) {
+                    string valueToFile = to_string(means[r][c]) + " ";
+                    wordfile << valueToFile;
+                }
+            }
+            if(!means[r].empty()) {
+                wordfile << "\n";
+            }
 
             for(int c = 0; c < stDevs[r].size(); c++) {
+                //cout << stDevs[r].size() << endl;
                 string valueToFile = to_string(stDevs[r][c]) + " ";
                 wordfile << valueToFile;
             }
-            wordfile << "\n";
+            if(!stDevs[r].empty()) {
+                wordfile << "\n";
+            }
         }
     }
 
@@ -389,6 +420,8 @@ void train(string word, vector<string> files, int clusters) {
 }
 
 int main() {
+    
+    // NOTE: Must update known words with proper parameters
 
     // Training set for the word "cat"
     const string CAT1 = COMPUTER_TRAINING_PATH + "cat1.txt";

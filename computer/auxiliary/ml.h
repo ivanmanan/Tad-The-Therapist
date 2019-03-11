@@ -24,6 +24,20 @@ public:
 	vector<double> squareDist(const vector<double>& input) const;
 	vector<double> getStDev() const;
 	double gaussProb(const vector<double>& input) const;
+	void printMFCCs() {
+		for(auto it = m_MFCCs.begin(); it != m_MFCCs.end(); it++) {
+			cout << *it << " ";
+		}
+		//cout << " size: " << m_MFCCs.size();
+		cout << endl;
+	};
+	void printStDev() {
+		for(auto it = m_StDev.begin(); it != m_StDev.end(); it++) {
+			cout << *it << " ";
+		}
+		//cout << " size: " << m_StDev.size();
+		cout << endl;
+	};
 
 private:
 	//pointers to 13 long array of doubles that contain the mean and standard
@@ -103,6 +117,10 @@ public:
 	// Returns probability that the input was produced by the HMM
 	double prob(const vector<vector<double>>& input) const;
 
+	// Debug functions
+	void printTransProb();
+	void printStates();
+
 	// Returns the word of the HMM
 	string word() const {return m_word;};
 
@@ -152,11 +170,7 @@ double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, co
 {
 	double alpha = 0;
 
-	if(tailIdx > 5) {
-		cout << tailIdx << endl;
-	}
-
-	//base case: if the input size is 1, then alpha is equal to the probability that the 
+		//base case: if the input size is 1, then alpha is equal to the probability that the 
 	//output corresponds to the initial state 
 	if (tailIdx == 0)
 	{
@@ -185,6 +199,27 @@ double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, co
 }
 
 
+void HMM::printTransProb() {
+	cout << "PROGRAM: Printing transitional probability for: " << m_word << endl;
+	for(int r = 0; r < m_transProb.size(); r++) {
+		for(int c = 0; c < m_transProb[0].size(); c++) {
+			cout << m_transProb[r][c] << " ";
+		}
+		cout << endl;
+	}
+}
+
+void HMM::printStates() {
+	cout << "PROGRAM: Printing states for word: " << m_word << endl;
+	for(auto s = m_states.begin(); s != m_states.end(); s++) {
+		int state_idx = distance(m_states.begin(), s);
+		cout << "Printing for state " << state_idx << endl;
+		cout << "Means: ";
+		s->printMFCCs();
+		cout << "Std Devs: ";
+		s->printStDev();
+	}
+}
 
 
 

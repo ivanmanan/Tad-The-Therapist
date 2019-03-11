@@ -29,7 +29,7 @@ vector<HMM> hmms;
 void buildHMMs() {
 
     // NOTE: Must update this array with every known vocabulary word
-    vector<string> words = {"test"};
+    vector<string> words = {"cat"};
     
 	// Read text files for data to insert into HMM
     for(auto wordPtr = words.begin(); wordPtr != words.end(); wordPtr++) {
@@ -85,15 +85,8 @@ void buildHMMs() {
         HMM hmm(word, states, transProb);
 
         // DEBUG: Print out states and transition probability
-        /*
-        cout << "WORD: " << word << endl;
-        for(int r = 0; r < transProb.size(); r++) {
-            for(int c = 0; c < transProb[0].size(); c++) {
-                cout << transProb[r][c] << " ";
-            }
-            cout << endl;
-        }
-        */
+        hmm.printTransProb();
+        hmm.printStates();
 
         hmms.push_back(hmm);
     }
@@ -133,6 +126,7 @@ string ml(string computer_input) {
 
     // DEBUG: Printing out input matrix
     /*
+    cout << "DEBUG: Input matrix from the LCDK: " << endl;
     for(int r = 0; r < input.size(); r++) {
         for(int c = 0; c < input[0].size(); c++) {
             cout << input[r][c] << " ";
@@ -140,6 +134,7 @@ string ml(string computer_input) {
         cout << endl;
     }
     */
+
 
     double max_probability = 0;
     string likely_word;
@@ -149,9 +144,9 @@ string ml(string computer_input) {
 	// Test the mfcc input to every HMM and return the word with greatest probability
     for(auto hmm = hmms.begin(); hmm != hmms.end(); hmm++) {
         string word = hmm->word();
-        cout << "Calculating probability for word: " << word << endl;
+        cout << "PROGRAM: Calculating probability for word: " << word << endl;
         double probability = hmm->prob(input);
-        cout << "Probability finished calculating" << endl;
+        cout << "PROGRAM: Word " << word << " has probability " << probability << endl;
         if(probability > max_probability) {
             max_probability = probability;
             likely_word = word;
