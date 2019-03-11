@@ -21,9 +21,9 @@ class State
 public:
 	State(string MFCCs, string StDev);
 	~State();
-	vector<double> squareDist(const vector<double>& input) const;
-	vector<double> getStDev() const;
-	double gaussProb(const vector<double>& input) const;
+	vector<long double> squareDist(const vector<long double>& input) const;
+	vector<long double> getStDev() const;
+	long double gaussProb(const vector<long double>& input) const;
 	void printMFCCs() {
 		for(auto it = m_MFCCs.begin(); it != m_MFCCs.end(); it++) {
 			cout << *it << " ";
@@ -42,8 +42,8 @@ public:
 private:
 	//pointers to 13 long array of doubles that contain the mean and standard
 	//deviation in each dimension
-	vector<double> m_StDev;
-	vector<double> m_MFCCs;
+	vector<long double> m_StDev;
+	vector<long double> m_MFCCs;
 };
 
 //string contains the 13 MFCC values, each separated by one space
@@ -52,7 +52,7 @@ State::State(string MFCCs, string StDev) {
 	size_t sz_start = 0;
 
 	for (int i = 0; i < NUM_MFCCS; ++i) {
-		m_MFCCs.push_back(stod(MFCCs.substr(sz_start), &sz));
+		m_MFCCs.push_back(stold(MFCCs.substr(sz_start), &sz));
 		sz_start += sz;
 	}
 
@@ -60,7 +60,7 @@ State::State(string MFCCs, string StDev) {
 	sz_start = 0;
 
 	for (int i = 0; i < NUM_MFCCS; ++i) {
-		m_StDev.push_back(stod(StDev.substr(sz_start), &sz));
+		m_StDev.push_back(stold(StDev.substr(sz_start), &sz));
 		sz_start += sz;
 	}
 }
@@ -69,9 +69,9 @@ State::~State() {}
 
 
 
-vector<double> State::squareDist(const vector<double>& input) const
+vector<long double> State::squareDist(const vector<long double>& input) const
 {
-	vector<double> output;
+	vector<long double> output;
 
 	//return empty vector if the size is mismatched
 	if (input.size() != NUM_MFCCS) {
@@ -91,11 +91,11 @@ vector<double> State::squareDist(const vector<double>& input) const
 //computes the probability that the input was produced by the state
 //that this corresponds to using a gaussian distribution
 //to simplify, we assume that the distributions of values in each dimension are independent 
-double State::gaussProb(const vector<double>& input) const
+long double State::gaussProb(const vector<long double>& input) const
 {
-	vector<double> distSquare = squareDist(input);
+	vector<long double> distSquare = squareDist(input);
 
-	double result = 1;
+	long double result = 1;
 
 	for (int i = 0; i < NUM_MFCCS; ++i)
 	{
@@ -112,10 +112,10 @@ double State::gaussProb(const vector<double>& input) const
 
 class HMM {
 public:
-	HMM(string word, vector<State> states, vector<vector<double>> transProb);
+	HMM(string word, vector<State> states, vector<vector<long double>> transProb);
 
 	// Returns probability that the input was produced by the HMM
-	double prob(const vector<vector<double>>& input) const;
+	long double prob(const vector<vector<long double>>& input) const;
 
 	// Debug functions
 	void printTransProb();
@@ -128,12 +128,12 @@ private:
 	string m_word;
 	int m_numStates;
 	vector<State> m_states;
-	vector<vector<double>> m_transProb;
+	vector<vector<long double>> m_transProb;
 
-	double getAlpha(const vector<vector<double>>& input, const int& tailIdx, const int& stateIdx, vector<vector<double>>& alphaVals) const;
+	long double getAlpha(const vector<vector<long double>>& input, const int& tailIdx, const int& stateIdx, vector<vector<long double>>& alphaVals) const;
 };
 
-HMM::HMM(string word, vector<State> states, vector<vector<double>> transProb) {
+HMM::HMM(string word, vector<State> states, vector<vector<long double>> transProb) {
 	m_word = word;
 	m_states = states;
 	m_transProb = transProb;
@@ -145,13 +145,13 @@ HMM::HMM(string word, vector<State> states, vector<vector<double>> transProb) {
 
 
 //uses forward algorithm to compute probability of the sequence of MFCCs given the HMM for m_phoneme
-double HMM::prob(const vector<vector<double>>& input) const {
-	double p = 0;
+long double HMM::prob(const vector<vector<long double>>& input) const {
+	long double p = 0;
 	int tailIdx = input.size() - 1; //vector index of the last entry
-	vector<vector<double>> alphaVals;
+	vector<vector<long double>> alphaVals;
 
 	//initialize alphaVals to matrix of -1
-	vector<double> init(m_numStates, -1);
+	vector<long double> init(m_numStates, -1);
 	for (int i = 0; i < input.size(); i++)
 	{
 		alphaVals.push_back(init);
@@ -166,9 +166,9 @@ double HMM::prob(const vector<vector<double>>& input) const {
 }
 
 //recursive function to calculate alpha in forward algorithm
-double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, const int& stateIdx, vector<vector<double>>& alphaVals) const
+long double HMM::getAlpha(const vector<vector<long double>>& input, const int& tailIdx, const int& stateIdx, vector<vector<long double>>& alphaVals) const
 {
-	double alpha = 0;
+	long double alpha = 0;
 
 		//base case: if the input size is 1, then alpha is equal to the probability that the 
 	//output corresponds to the initial state 
