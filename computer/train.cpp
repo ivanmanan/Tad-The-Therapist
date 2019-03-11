@@ -356,6 +356,7 @@ void train(string word, vector<string> files, int clusters) {
     string transProb_path = COMPUTER_TRANS_PROB_PATH + word + ".txt";
     
     ofstream wordfile(word_path);
+    int clusterCtr = clusters;
 
     // Must alternate between rows
     if(wordfile.is_open()) {
@@ -394,6 +395,11 @@ void train(string word, vector<string> files, int clusters) {
             if(!means[r].empty()) {
                 wordfile << "\n";
             }
+            else
+            {
+                clusterCtr--;
+            }
+            
 
             for(int c = 0; c < stDevs[r].size(); c++) {
                 //cout << stDevs[r].size() << endl;
@@ -409,8 +415,8 @@ void train(string word, vector<string> files, int clusters) {
 
     ofstream transProbFile(transProb_path);
     if(transProbFile.is_open()) {
-        for(int r = 0; r < transProb.size(); r++) {
-            for(int c = 0; c < transProb[r].size(); c++) {
+        for(int r = 0; r < clusterCtr; r++) {
+            for(int c = 0; c < clusterCtr; c++) {
                 string valueToFile = to_string(transProb[r][c]) + " ";
                 transProbFile << valueToFile;
             }
