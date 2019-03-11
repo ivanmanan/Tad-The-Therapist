@@ -39,7 +39,7 @@ void buildHMMs() {
 
         // Read the text files and store as data structures
         vector<State> states;
-        vector<vector<double>> transProb;
+        vector<vector<long double>> transProb;
         string mfccData;
         string stdDevData;
         ifstream stateFile(wordStateFile);
@@ -59,7 +59,7 @@ void buildHMMs() {
         // NOTE: transProb must be converted from string to double
         string prob_line;
         ifstream transProbFile(wordTransProbFile);
-        vector<double> singleRowData;
+        vector<long double> singleRowData;
         if(transProbFile.is_open()) {
             while(getline(transProbFile, prob_line)) {
                 stringstream ss(prob_line);
@@ -74,7 +74,8 @@ void buildHMMs() {
                     double value;
 
                     stringstream(valueString) >> value;
-                    singleRowData.push_back(value);
+                    long double lvalue = (long double) value;
+                    singleRowData.push_back(lvalue);
                 }
                 transProb.push_back(singleRowData);
                 singleRowData.clear();
@@ -99,8 +100,8 @@ void buildHMMs() {
 string ml(string computer_input) {
 
     // Take input file and convert to matrix of doubles
-    vector<vector<double>> input;
-    vector<double> singleRowInput;
+    vector<vector<long double>> input;
+    vector<long double> singleRowInput;
     string input_line;
     ifstream inputFile(computer_input);
     if(inputFile.is_open()) {
@@ -117,7 +118,8 @@ string ml(string computer_input) {
                 double value;
 
                 stringstream(valueString) >> value;
-                singleRowInput.push_back(value);
+                long double lvalue = (long double)value;
+                singleRowInput.push_back(lvalue);
             }
             input.push_back(singleRowInput);
             singleRowInput.clear();
