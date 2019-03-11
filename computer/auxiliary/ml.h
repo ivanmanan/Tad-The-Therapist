@@ -112,7 +112,7 @@ private:
 	vector<State> m_states;
 	vector<vector<double>> m_transProb;
 
-	double getAlpha(const vector<vector<double>>& input, const int& tailIdx, const int& stateIdx) const;
+	double getAlpha(const vector<vector<double>>& input, const int& tailIdx, const int& stateIdx, vector<vector<double>>& alphaVals) const;
 };
 
 HMM::HMM(string word, vector<State> states, vector<vector<double>> transProb) {
@@ -130,17 +130,25 @@ HMM::HMM(string word, vector<State> states, vector<vector<double>> transProb) {
 double HMM::prob(const vector<vector<double>>& input) const {
 	double p = 0;
 	int tailIdx = input.size() - 1; //vector index of the last entry
+	vector<vector<double>> alphaVals;
+
+	//initialize alphaVals to matrix of -1
+	vector<double> init(m_numStates, -1);
+	for (int i = 0; i < input.size(); i++)
+	{
+		alphaVals.push_back(init);
+	}
 
 	for (int stateIdx = 0; stateIdx < m_numStates; ++stateIdx)
 	{
-		p += getAlpha(input, tailIdx, stateIdx);
+		p += getAlpha(input, tailIdx, stateIdx, alphaVals);
 	}
 
 	return p;
 }
 
 //recursive function to calculate alpha in forward algorithm
-double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, const int& stateIdx) const
+double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, const int& stateIdx, vector<vector<double>>& alphaVals) const
 {
 	double alpha = 0;
 
@@ -148,8 +156,12 @@ double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, co
 	//output corresponds to the initial state 
 	if (tailIdx == 0)
 	{
-		if (stateIdx == 0)
-			return m_states[0].gaussProb(input[0]);
+		if (stateIdx == 0) {
+			if (alphaVals[0][0] >= 0)
+				return alphaVals[0][0];
+			else
+				return m_states[0].gaussProb(input[0]);
+		}
 		//if not initial state, probability is zero
 		else
 			return 0;
@@ -157,10 +169,14 @@ double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, co
 
 	for (int i = 0; i < m_numStates; ++i)
 	{
-		alpha += getAlpha(input, tailIdx - 1, i) * m_transProb[i][stateIdx];
+		if (alphaVals[tailIdx - 1][i] >= 0)
+			alpha += alphaVals[tailIdx - 1][i] * m_transProb[i][stateIdx];
+		else
+			alpha += getAlpha(input, tailIdx - 1, i, alphaVals) * m_transProb[i][stateIdx];
 	}
 
 	alpha *= m_states[stateIdx].gaussProb(input[tailIdx]);
+	alphaVals[tailIdx][stateIdx] = alpha;
 	return alpha;
 }
 
