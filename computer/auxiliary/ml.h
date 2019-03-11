@@ -152,6 +152,10 @@ double HMM::getAlpha(const vector<vector<double>>& input, const int& tailIdx, co
 {
 	double alpha = 0;
 
+	if(tailIdx > 5) {
+		cout << tailIdx << endl;
+	}
+
 	//base case: if the input size is 1, then alpha is equal to the probability that the 
 	//output corresponds to the initial state 
 	if (tailIdx == 0)

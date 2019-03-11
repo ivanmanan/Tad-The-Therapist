@@ -131,8 +131,8 @@ string ml(string computer_input) {
         }
     }
 
+    // DEBUG: Printing out input matrix
     /*
-    cout << "PROGRAM: Printing out input matrix." << endl;
     for(int r = 0; r < input.size(); r++) {
         for(int c = 0; c < input[0].size(); c++) {
             cout << input[r][c] << " ";
@@ -144,12 +144,12 @@ string ml(string computer_input) {
     double max_probability = 0;
     string likely_word;
 
-    cout << "Calculating probability..." << endl;
-    // TODO: There is an error with hmm->prob
+    // TODO: There is an error with hmm->prob or the input 2d array
 
 	// Test the mfcc input to every HMM and return the word with greatest probability
     for(auto hmm = hmms.begin(); hmm != hmms.end(); hmm++) {
         string word = hmm->word();
+        cout << "Calculating probability for word: " << word << endl;
         double probability = hmm->prob(input);
         cout << "Probability finished calculating" << endl;
         if(probability > max_probability) {

@@ -7,17 +7,12 @@
 #include <ti/dsplib/dsplib.h>
 #include <string.h>
 
-
 #define PI 3.14159265358979323
 #define numMFCCs 13
+#define numData 62
 #define frameSize 1024 //number of samples per frame (real+imag)
 #define freq_inc 15.625 // increment between adjacent FFT frequencies
 #define mel_inc 92.4444 //increment between adjacent mel frequencies
-
-//GUI Parameters
-int checkbox_start = 0;
-int checkbox_record = 0;
-
 
 float corr = 0;
 float slope;
@@ -27,24 +22,19 @@ float PSD_arr [frameSize];
 float hamming_window [frameSize];
 float Xm[26]; //input to DCT
 float Ym[26];
-float MFCC_arr[numMFCCs];
+float MFCC_arr[numData][numMFCCs];
 float cos_table[26][13]; //DCT lookup table; mrow kcol
 int filter_peaks[28]; //contains PSD array sample indices of the filter peaks
-int MFCC_ctr = 0; //iterates through 13 MFCCs
 int samp_ctr = 0; //iterates through clock cycles
 int call_compute = 0; //flag that tells main to run computation
 int pc_busy = 0; //=1 when computer is busy running HMMs
-int mfcc_file_flag = 0; //tracks when to call fopen on the MFCC data file
-char init;
+int MFCC_idx = 0;
 
 int frame_tracker = 0; //track array that is having first half filled
 
 
 //file pointers
 FILE * mfcc_data; //contains MFCCs that are sent to the PC
-FILE * start; //tells computer when user initiates the program
-FILE * done; //tells computer when recording finishes
-FILE * busy; //tells LCDK when computer is busy
 
 /* Align the tables that we have to use */
 
@@ -86,6 +76,22 @@ unsigned char brev[64] = {
 
 
 void export_mfcc();
+
+void all_off() { // Turn off all LED lights
+    LCDK_LED_off(4);
+    LCDK_LED_off(5);
+    LCDK_LED_off(6);
+    LCDK_LED_off(7);
+    return;
+}
+
+void all_on() {
+    LCDK_LED_on(4);
+    LCDK_LED_on(5);
+    LCDK_LED_on(6);
+    LCDK_LED_on(7);
+    return;
+}
 
 
 // Function for generating sequence of twiddle factors
@@ -156,6 +162,20 @@ void gen_cos_table(){
     }
 }
 
+// Function that returns a '0' or '1'
+char readCharFile(const char* FILE_NAME) {
+    FILE* file = fopen(FILE_NAME, "r");
+    return fgetc(file);
+}
+
+// Function that writes into the file a single char value
+void writeCharFile(const char* FILE_NAME, char new_value) {
+    FILE* file = fopen(FILE_NAME, "w");
+    fprintf(file, "%c", new_value);
+    fclose(file);
+}
+
+
 void compute(){
     //store fft of input samples in y_sp
     switch (frame_tracker){
@@ -198,30 +218,70 @@ void compute(){
     }
 
     //DCT
-    for(i = 0; i < numMFCCs; ++i){ // i=k
-        MFCC_arr[i] = 0;
+    if(MFCC_idx < numData) {
+        for(i = 0; i < numMFCCs; ++i){ // i=k
+            MFCC_arr[MFCC_idx][i] = 0;
 
-        for(j = 0; j < 26; ++j){ // j=m
-            MFCC_arr[i] += Xm[j] * cos_table[j][i];
+            for(j = 0; j < 26; ++j){ // j=m
+                MFCC_arr[MFCC_idx][i] += Xm[j] * cos_table[j][i];
+            }
         }
+        MFCC_idx++;
     }
-
-    //print MFCCs to a file
-    int pos;
-    for(pos = 0; pos < numMFCCs; ++pos){
-        fprintf(mfcc_data, "%f", MFCC_arr[pos]);
-    }
-    fprintf(mfcc_data, "\n");
 
 }
 
+void export_mfcc() {
+
+    // w+ is update; while w is overwrite
+    mfcc_data = fopen("input.txt", "w");
+    int row, col;
+    for (row = 5; row < numData; row++) {
+        for (col = 0; col < numMFCCs; col++) {
+            fprintf(mfcc_data, "%f ", MFCC_arr[row][col]);
+        }
+        fprintf(mfcc_data, "\n");
+    }
+    fclose(mfcc_data);
+
+    // Perform bit flip on lcdk/done.txt
+    const char* done_file = "done.txt";
+    char init = readCharFile(done_file);
+    if (init == '0'){
+        writeCharFile(done_file, '1');
+    }
+    else {
+        writeCharFile(done_file, '0');
+    }
+}
+
+
+
+int change = 0;
+int prevChange = 0;
+int ctt = 0;
+// Reinitialize the L138 function again after printf
 interrupt void interrupt4(void) // interrupt service routine
 {
+    ctt++;
+    if (ctt > 50000) {
+        ctt = 0;
+    }
 
-    if (checkbox_record == 1){ //start recording
-            //store audio input in x_sp
+    // Switch is turned on
+    if(LCDK_SWITCH_state(5) == 1 && change == 0) {
+        all_on();
+        change = 1;
+    }
+    // Switch is turned off
+    else if (LCDK_SWITCH_state(5) == 0 && change > 0) {
+        all_off();
+        change = 0;
+    }
+
+    if (LCDK_SWITCH_state(5) == 1 && change == 1){ //start recording
+        //store audio input in x_sp
         switch (frame_tracker){
-
             case 0:
                 left_sample = input_left_sample();
                 x_sp0[2*samp_ctr] = (float)left_sample * hamming_window[samp_ctr]; // even index = real
@@ -262,8 +322,17 @@ interrupt void interrupt4(void) // interrupt service routine
                 }
                 break;
         }
+
+        // Record for 2 seconds
+        if (MFCC_idx >= numData) {
+            MFCC_idx = 0;
+            change = 2;
+            all_off();
+            // Export the current MFCC's into a text file
+            export_mfcc();
+        }
     }
-    else { //checkbox_record == 0
+    else { // Switch is turned off
         frame_tracker = 0;
         samp_ctr = 0;
         call_compute = 0;
@@ -273,55 +342,25 @@ interrupt void interrupt4(void) // interrupt service routine
     return;
 }
 
-/*
-void export_mfcc() {
-
-    // Create file that exports array
-    FILE * fp;
-    fp = fopen("training_samples.txt", "w+");
-
-    int row, col;
-    for (row = 0; row < numData; row++) {
-        for (col = 0; col < numMFCCs; col++) {
-            fprintf(fp, "%f ", MFCC_arr[row][col]);
-        }
-        fprintf(fp, "\n");
-    }
-
-    fclose(fp);
-}
-*/
-
-
-// Function that returns a '0' or '1'
-char readCharFile(const char* FILE_NAME) {
-    FILE* file = fopen(FILE_NAME, "r");
-    return fgetc(file);
-}
-
-// Function that writes into the file a single char value
-void writeCharFile(const char* FILE_NAME, char new_value) {
-    FILE* file = fopen(FILE_NAME, "w");
-    fprintf(file, "%c", new_value);
-    fclose(file);
-}
-
 int main(void)
 {
-    L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_MIC_INPUT);
+    // Change to LCDK_MIC_input if using usb microphone
     LCDK_GPIO_init();
+    LCDK_SWITCH_init();
+    LCDK_LED_init();
 
+    all_off();
     get_filter_peaks();
     fill_hamming();
     gen_cos_table();
     gen_twiddle_fft_sp(w_sp, frameSize);
 
-
     //////////////////////////////////////////////////////////////
     //Initialize Files
 
-    // TODO: This function should be triggered when user presses the button to initialize therapy session
-    // Perform bit flip on the lcdk/start.txt file
+    // NOTE: User runs this program every time they want to initialize a therapy session
+    // Performs bit flip on the lcdk/start.txt file
+
     const char* start_file = "start.txt";
     char init = readCharFile(start_file);
     if (init == '0'){
@@ -330,65 +369,26 @@ int main(void)
     else {
         writeCharFile(start_file, '0');
     }
+    // NOTE: Interrupt function does not work with fprintf
+    L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_LINE_INPUT);
 
 
     //////////////////////////////////////////////////////////////
 
-    while (1){
+    while (1) {
 
-        if (checkbox_start == 1){
+        if (prevChange != change) {
+            prevChange = change;
+            // Reinitialize interrupt function after printf
+            L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_LINE_INPUT);
 
-            //check if PC is busy with HMMs
-            FILE * busyTemp = busy;
-            fscanf(busy, "%d", pc_busy);
-            busy = busyTemp; //move pointer back to start of file
-            if(pc_busy == 1){
-                call_compute = 0; //prevent computation and recording
-                checkbox_record = 0;
-            }
-
-            if (mfcc_file_flag == 1) {
-                mfcc_data = fopen("input.txt", "w");
-                mfcc_file_flag = 0;
-            }
-
-            if(call_compute == 1){ //buffer is filled
-                call_compute = 0;
-                compute();
-            }
-            /*
-             * if (check for flag from pc){
-             *      pc_busy = 1;
-             * }
-             * else {
-             *      pc_busy = 0;
-             * }
-             */
         }
-        /*
 
-        else { //user ended the program
-            // TODO: Do not initialize as 0, but rather do a bit flip on start.txt
-            // TODO: The only file where bit flip matters is the computer/busy.txt
-            //       0 means computer is idle, 1 means computer is busy
-            checkbox_record = 0;
-            start = fopen("start.txt", "w");
-            fprintf(start, "%c", "0");
-            fclose(start);
-
-
-            done = fopen("done.txt", "w");
-            fprintf(done, "%c", "0");
-            fclose(done);
-
-            fclose(busy);
-            fclose(mfcc_data);
-
-            frame_tracker = 0;
-            samp_ctr = 0;
+        if(call_compute == 1){ //buffer is filled
             call_compute = 0;
+            compute();
+            // Reinitialize interrupt function again due to exporting of mfcc's into a text file
+            L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_LINE_INPUT);
         }
-        */
-
     }
 }
