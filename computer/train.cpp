@@ -116,16 +116,23 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
     srand(time(NULL));
     for (int i = 0; i < numClusters; i++)
     {
+        /*
         //calculate random starting centroids
         for (int m = 0; m < 14; m++)
         {
-            double newMax = max - ((max - min) * 0.4);
-            double newMin = min + ((max - min) * 0.4);
+            //confine starting means within the central 10% of the dataset
+            double newMax = max - ((max - min) * 0.45);
+            double newMin = min + ((max - min) * 0.45);
             double next = (newMax - newMin) * ( (double)rand() / (double)RAND_MAX ) + newMin;
             newCentroid[m] = next;
             //cout << newCentroid[m] << " ";
         }
         centroids.push_back(newCentroid);
+        */
+       
+       int idx = i * data[0].size() / numClusters;
+       centroids.push_back(data[0][idx]);
+
         /*
         for (int m = 0; m < 14; m++)
         {
