@@ -141,13 +141,19 @@ string ml(string computer_input) {
     double max_probability = 0;
     string likely_word;
 
-    // TODO: There is an error with hmm->prob or the input 2d array
+    // TODO: There is an error with hmm->prob or the input 2d array due to scaling
+    // Multiply scale by a factor of 10
+    const long double scale = 0.1;
 
 	// Test the mfcc input to every HMM and return the word with greatest probability
     for(auto hmm = hmms.begin(); hmm != hmms.end(); hmm++) {
         string word = hmm->word();
         cout << "PROGRAM: Calculating probability for word: " << word << endl;
-        double probability = hmm->prob(input);
+
+        // TODO: Must create for-loop that scales until i get a probability
+        //       Must be able to break out of infinite recursion
+
+        double probability = hmm->prob(input, scale);
         cout << "PROGRAM: Word " << word << " has probability " << probability << endl;
         if(probability > max_probability) {
             max_probability = probability;
