@@ -29,7 +29,7 @@ vector<HMM> hmms;
 void buildHMMs() {
 
     // NOTE: Must update this array with every known vocabulary word
-    vector<string> words = {"cat"};
+    vector<string> words = {"cat", "dog"};
     
 	// Read text files for data to insert into HMM
     for(auto wordPtr = words.begin(); wordPtr != words.end(); wordPtr++) {
@@ -143,23 +143,35 @@ string ml(string computer_input) {
 
     // TODO: There is an error with hmm->prob or the input 2d array due to scaling
     // Multiply scale by a factor of 10
-    const long double scale = 0.1;
+    //const long double scale = 100;
+    
+
 
 	// Test the mfcc input to every HMM and return the word with greatest probability
-    for(auto hmm = hmms.begin(); hmm != hmms.end(); hmm++) {
-        string word = hmm->word();
-        cout << "PROGRAM: Calculating probability for word: " << word << endl;
+    long double scale = 1;
 
-        // TODO: Must create for-loop that scales until i get a probability
-        //       Must be able to break out of infinite recursion
+    cout << "==========================================================" << endl;
+    while(1) {
 
-        double probability = hmm->prob(input, scale);
-        cout << "PROGRAM: Word " << word << " has probability " << probability << endl;
-        if(probability > max_probability) {
-            max_probability = probability;
-            likely_word = word;
+        if(max_probability > 0) {
+            break;
         }
-        cout << word << endl;
+
+        for(auto hmm = hmms.begin(); hmm != hmms.end(); hmm++) {
+            string word = hmm->word();
+            cout << "PROGRAM: Calculating probability for word: " << word << endl;
+
+            // TODO: Must create for-loop that scales until i get a probability
+            //       Must be able to break out of infinite recursion
+
+            double probability = hmm->prob(input, scale);
+            cout << "PROGRAM: Word " << word << " has probability " << probability << endl;
+            if(probability > max_probability) {
+                max_probability = probability;
+                likely_word = word;
+            }
+        }
+        scale = scale * 10;
     }
 	return likely_word;
 }

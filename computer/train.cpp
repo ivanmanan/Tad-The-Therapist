@@ -437,15 +437,33 @@ int main() {
     const string CAT3 = COMPUTER_TRAINING_PATH + "cat3.txt";
     const string CAT4 = COMPUTER_TRAINING_PATH + "cat4.txt";
     const string CAT5 = COMPUTER_TRAINING_PATH + "cat5.txt";
+    const string CAT6 = COMPUTER_TRAINING_PATH + "cat6.txt";
+    const string CAT7 = COMPUTER_TRAINING_PATH + "cat7.txt";
+    const string CAT8 = COMPUTER_TRAINING_PATH + "cat8.txt";
+    const string CAT9 = COMPUTER_TRAINING_PATH + "cat9.txt";
+    const string CAT10 = COMPUTER_TRAINING_PATH + "cat10.txt";
+
+    const string DOG1 = COMPUTER_TRAINING_PATH + "dog1.txt";
+    const string DOG2 = COMPUTER_TRAINING_PATH + "dog2.txt";
+    const string DOG3 = COMPUTER_TRAINING_PATH + "dog3.txt";
+    const string DOG4 = COMPUTER_TRAINING_PATH + "dog4.txt";
+    const string DOG5 = COMPUTER_TRAINING_PATH + "dog5.txt";
+    const string DOG6 = COMPUTER_TRAINING_PATH + "dog6.txt";
+    const string DOG7 = COMPUTER_TRAINING_PATH + "dog7.txt";
+    const string DOG8 = COMPUTER_TRAINING_PATH + "dog8.txt";
+    const string DOG9 = COMPUTER_TRAINING_PATH + "dog9.txt";
+    const string DOG10 = COMPUTER_TRAINING_PATH + "dog10.txt";
+
 
     // Parameters to modify
     int clusters = 5;
 
-    vector<string> cat = {CAT1, CAT2, CAT3, CAT4, CAT5};
+    vector<string> cat = {CAT1, CAT2, CAT3, CAT4, CAT5, CAT6, CAT7, CAT8, CAT9, CAT10};
+    vector<string> dog = {DOG1, DOG2, DOG3, DOG4, DOG5, DOG6, DOG7, DOG8, DOG9, DOG10};
 
     // Add words to train
-    vector<string> words = {"cat"};
-    vector<vector<string>> files = {cat};
+    vector<string> words = {"cat", "dog"};
+    vector<vector<string>> files = {cat, dog};
 
     auto file = files.begin();
     for(auto word = words.begin(); word != words.end(); word++, file++) {
