@@ -30,3 +30,5 @@ bin/
 /computer/NN_values.txt
 /computer/output/output.txt
 /computer/output/convo*
+/computer/transProb/**
+/computer/words/**
