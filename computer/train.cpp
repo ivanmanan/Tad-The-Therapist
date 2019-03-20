@@ -463,7 +463,7 @@ int main() {
 
 
     // Parameters to modify
-    int clusters = 5;
+    int clusters = 15;
 
     vector<string> cat = {CAT1, CAT2, CAT3, CAT4, CAT5, CAT6, CAT7, CAT8, CAT9, CAT10};
     vector<string> dog = {DOG1, DOG2, DOG3, DOG4, DOG5, DOG6, DOG7, DOG8, DOG9, DOG10};

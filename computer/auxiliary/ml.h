@@ -95,7 +95,7 @@ long double State::gaussProb(const vector<long double>& input, const long double
 {
 	vector<long double> distSquare = squareDist(input);
 
-	long double result = 1;
+	long double result = 20;
 
 	for (int i = 0; i < NUM_MFCCS; ++i)
 	{
