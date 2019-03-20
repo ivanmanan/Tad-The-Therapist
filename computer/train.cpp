@@ -340,7 +340,7 @@ void train(string word, vector<string> files, int clusters) {
             if (clustersData[i+1].empty() || i == clustersData.size() - 1)
                 row[i] = 1;
             else {
-                row[i] = ((double)clustersData[i].size() - 1) / (double)clustersData[i].size();
+                row[i] = ((double)clustersData[i].size() - files.size()) / (double)clustersData[i].size();
                 row[i+1] = 1 - row[i];
             }
         }
