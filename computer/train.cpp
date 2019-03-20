@@ -461,6 +461,8 @@ int main() {
     const string DOG9 = COMPUTER_TRAINING_PATH + "dog9.txt";
     const string DOG10 = COMPUTER_TRAINING_PATH + "dog10.txt";
 
+    
+
 
     // Parameters to modify
     int clusters = 15;

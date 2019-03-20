@@ -2,6 +2,8 @@ sad
 50Why are you sad?;50Sadness flies away on the wings of time.;
 dog
 00I love dogs.;
+cat
+50Are you a cat person?;50I love cats. They are lower maintenance than dogs.;
 happy
 50It is great to hear you are happy!;50It sounds like my job is done. Remember, do not take life too seriously. You’ll never get out of it alive.;
 professor
