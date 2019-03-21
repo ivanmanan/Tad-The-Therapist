@@ -29,7 +29,7 @@ vector<HMM> hmms;
 void buildHMMs() {
 
     // NOTE: Must update this array with every known vocabulary word
-    vector<string> words = {"cat", "dog"};
+    vector<string> words = {"cat", "dog", "professor"};
     
 	// Read text files for data to insert into HMM
     for(auto wordPtr = words.begin(); wordPtr != words.end(); wordPtr++) {
@@ -171,7 +171,7 @@ string ml(string computer_input) {
                 likely_word = word;
             }
         }
-        scale = scale * 10;
+        scale = scale * 5;
     }
 	return likely_word;
 }

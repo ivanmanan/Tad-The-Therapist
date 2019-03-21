@@ -101,6 +101,7 @@ long double State::gaussProb(const vector<long double>& input, const long double
 	{
 		//result *= (2000000000000000 / (root2pi * m_StDev[i])) * exp((-1) * distSquare[i] / (2 * m_StDev[i] * m_StDev[i]));
 		result *= ((scale / (root2pi * m_StDev[i])) * exp((-1) * distSquare[i] / (2 * m_StDev[i] * m_StDev[i])));
+		result /= 58;
 		//cout << m_StDev[i] << endl;
 	}
 

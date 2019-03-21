@@ -461,18 +461,30 @@ int main() {
     const string DOG9 = COMPUTER_TRAINING_PATH + "dog9.txt";
     const string DOG10 = COMPUTER_TRAINING_PATH + "dog10.txt";
 
-    
+    const string PROFESSOR1 = COMPUTER_TRAINING_PATH + "professor1.txt";
+    const string PROFESSOR2 = COMPUTER_TRAINING_PATH + "professor2.txt";
+    const string PROFESSOR3 = COMPUTER_TRAINING_PATH + "professor3.txt";
+    const string PROFESSOR4 = COMPUTER_TRAINING_PATH + "professor4.txt";
+    const string PROFESSOR5 = COMPUTER_TRAINING_PATH + "professor5.txt";
+    const string PROFESSOR6 = COMPUTER_TRAINING_PATH + "professor6.txt";
+    const string PROFESSOR7 = COMPUTER_TRAINING_PATH + "professor7.txt";
+    const string PROFESSOR8 = COMPUTER_TRAINING_PATH + "professor8.txt";
+    const string PROFESSOR9 = COMPUTER_TRAINING_PATH + "professor9.txt";
+    const string PROFESSOR10 = COMPUTER_TRAINING_PATH + "professor10.txt";
+
 
 
     // Parameters to modify
-    int clusters = 15;
+    int clusters = 10;
 
     vector<string> cat = {CAT1, CAT2, CAT3, CAT4, CAT5, CAT6, CAT7, CAT8, CAT9, CAT10};
     vector<string> dog = {DOG1, DOG2, DOG3, DOG4, DOG5, DOG6, DOG7, DOG8, DOG9, DOG10};
+    vector<string> professor = {PROFESSOR1, PROFESSOR2, PROFESSOR3, PROFESSOR4, PROFESSOR5, PROFESSOR6, PROFESSOR7, PROFESSOR8, PROFESSOR9, PROFESSOR10};
+
 
     // Add words to train
-    vector<string> words = {"cat", "dog"};
-    vector<vector<string>> files = {cat, dog};
+    vector<string> words = {"cat", "dog", "professor"};
+    vector<vector<string>> files = {cat, dog, professor};
 
     auto file = files.begin();
     for(auto word = words.begin(); word != words.end(); word++, file++) {
