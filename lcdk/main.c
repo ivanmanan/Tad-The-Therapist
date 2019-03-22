@@ -9,9 +9,9 @@
 
 #define PI 3.14159265358979323
 #define numMFCCs 13
-#define numData 62
-#define frameSize 1024 //number of samples per frame (real+imag)
-#define freq_inc 15.625 // increment between adjacent FFT frequencies
+#define numData 80 // 62 before
+#define frameSize 512//1024 //number of samples per frame (real+imag)
+#define freq_inc 31.25//15.625 // increment between adjacent FFT frequencies
 #define mel_inc 92.4444 //increment between adjacent mel frequencies
 
 float corr = 0;
@@ -177,18 +177,18 @@ void writeCharFile(const char* FILE_NAME, char new_value) {
 
 
 void compute(){
-    //store fft of input samples in y_sp
+    // store fft of input samples in y_sp
     switch (frame_tracker){
         case 0 :
-            DSPF_sp_fftSPxSP(frameSize,x_sp2,w_sp,y_sp,brev,4,0,frameSize);
+            DSPF_sp_fftSPxSP(frameSize,x_sp1,w_sp,y_sp,brev,4,0,frameSize);
             magnitude_square(); // store PSD of input in PSD_arr
             break;
         case 1 :
-            DSPF_sp_fftSPxSP(frameSize,x_sp0,w_sp,y_sp,brev,4,0,frameSize);
+            DSPF_sp_fftSPxSP(frameSize,x_sp2,w_sp,y_sp,brev,4,0,frameSize);
             magnitude_square(); // store PSD of input in PSD_arr
             break;
         case 2 :
-            DSPF_sp_fftSPxSP(frameSize,x_sp1,w_sp,y_sp,brev,4,0,frameSize);
+            DSPF_sp_fftSPxSP(frameSize,x_sp0,w_sp,y_sp,brev,4,0,frameSize);
             magnitude_square(); // store PSD of input in PSD_arr
             break;
     }
@@ -196,8 +196,7 @@ void compute(){
     int i;
     int j;
 
-    //inner product of 26 filters with PSD
-    for(i = 1; i < 27; ++i){ //iterate through filter peaks
+    for(i = 1; i < 27; ++i){ // Iterate through filter peaks
         corr = 0;
         for(j = filter_peaks[i-1]; j < filter_peaks[i]; ++j){ //upslope
             slope = 1 / (float)(filter_peaks[i] - filter_peaks[i-1]);
@@ -211,13 +210,13 @@ void compute(){
     }
 
     float logVal;
-    //take log of Ym to get Xm
+    // Take log of Ym to get Xm
     for(i = 0; i < 26; ++i){
         logVal = log10f(Ym[i]);
         Xm[i] = logVal;
     }
 
-    //DCT
+    // DCT
     if(MFCC_idx < numData) {
         for(i = 0; i < numMFCCs; ++i){ // i=k
             MFCC_arr[MFCC_idx][i] = 0;
@@ -254,8 +253,6 @@ void export_mfcc() {
         writeCharFile(done_file, '0');
     }
 }
-
-
 
 int change = 0;
 int prevChange = 0;
@@ -360,7 +357,6 @@ int main(void)
 
     // NOTE: User runs this program every time they want to initialize a therapy session
     // Performs bit flip on the lcdk/start.txt file
-
     const char* start_file = "start.txt";
     char init = readCharFile(start_file);
     if (init == '0'){
@@ -370,25 +366,21 @@ int main(void)
         writeCharFile(start_file, '0');
     }
     // NOTE: Interrupt function does not work with fprintf
-    L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_LINE_INPUT);
-
+    L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_MIC_INPUT);
 
     //////////////////////////////////////////////////////////////
-
     while (1) {
 
         if (prevChange != change) {
             prevChange = change;
-            // Reinitialize interrupt function after printf
-            L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_LINE_INPUT);
+            // Reinitialize interrupt function again due to exporting of mfcc's into a text file
+            L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_MIC_INPUT);
 
         }
 
         if(call_compute == 1){ //buffer is filled
             call_compute = 0;
             compute();
-            // Reinitialize interrupt function again due to exporting of mfcc's into a text file
-            L138_initialise_intr(FS_16000_HZ,ADC_GAIN_21DB,DAC_ATTEN_0DB,LCDK_LINE_INPUT);
         }
     }
 }

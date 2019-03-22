@@ -1,12 +1,9 @@
 /*
     Main code that goes onto the computer
-    Execute this to run trials from the LCDK output
+    Execute this to run entire system
     This code would be running in background continuously, detecting changes in lcdk/output
     It reads the text file made from train.cpp and apply HMM's onto the MFCC's from the LCDK
-    This file exports speech recognition and an appropriate response as output/test.txt
-
-    NOTE: I need to implement class objects and place it onto the MakeFile as well
-    NOTE: I need to make the C++ file paths and the Makefile compatible with Windows Powershell
+    This file exports speech recognition and an appropriate response as output/output.txt
 */
 
 #include <iostream>
@@ -27,9 +24,7 @@ using namespace this_thread; // sleep_for, sleep_until
 using namespace chrono; // nanoseconds, system_clock, seconds
 
 
-// TODO: When project is finalized, run C++ program on WSL and web server on PowerShell
-// NOTE: WSL use regular file path
-// NOTE: Windows PowerShell use Windows file path
+// NOTE: Run C++ program on WSL and web server on PowerShell
 const string LCDK_FILE_PATH = "/mnt/c/Users/ivanm/workspace_v8/lcdk/Debug/";
 const string COMPUTER_WORDS_PATH = "/mnt/c/therapist/computer/words/";
 const string COMPUTER_TRANS_PROB_PATH = "/mnt/c/therapist/computer/transProb/";
@@ -142,7 +137,7 @@ string ml(string computer_input) {
         }
     }
 
-    // DEBUG: Printing out input matrix
+    // DEBUG: Prints out input matrix
     /*
     cout << "DEBUG: Input matrix from the LCDK: " << endl;
     for(int r = 0; r < input.size(); r++) {
@@ -153,32 +148,18 @@ string ml(string computer_input) {
     }
     */
 
-
     double max_probability = 0;
     string likely_word;
-
-    // TODO: There is an error with hmm->prob or the input 2d array due to scaling
-    // Multiply scale by a factor of 10
-    //const long double scale = 100;
-    
-
-
 	// Test the mfcc input to every HMM and return the word with greatest probability
     long double scale = 1;
 
     cout << "==========================================================" << endl;
     while(1) {
-
         if(max_probability > 0) {
             break;
         }
-
         for(auto hmm = hmms.begin(); hmm != hmms.end(); hmm++) {
             string word = hmm->word();
-
-            // TODO: Must create for-loop that scales until i get a probability
-            //       Must be able to break out of infinite recursion
-
             double probability = hmm->prob(input, scale);
             if(probability > max_probability) {
                 max_probability = probability;
@@ -190,14 +171,13 @@ string ml(string computer_input) {
 	return likely_word;
 }
 
-
 bool conversate(const string INPUT_FILE, unordered_map<string, vector<probResponse>>& vocabulary) {
     
     // Feed into HMM
     string client_message = ml(INPUT_FILE);
     cout << "USER: " << client_message << endl;
 
-    // Obtain resposne from Tad
+    // Obtain response from Tad
     string response = respond(client_message, vocabulary);
     cout << "PROGRAM: " << response << endl;
 
@@ -213,11 +193,9 @@ bool conversate(const string INPUT_FILE, unordered_map<string, vector<probRespon
     }
 }
 
-
 int main() {
     buildHMMs();
     unordered_map<string, vector<probResponse>> vocabulary = preprocessing();
-
 
     while(1) {
         // Read lcdk/start.txt if user triggers a therapy session
