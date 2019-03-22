@@ -1,14 +1,3 @@
-# To-Do List
-* Display the Web user interface onto a big screen so I can assess the Bootstrap scaling and whether everything will look fine in a bigger screen other than my laptop
-* Implement LCDK button trigger to pass first response into the text file
-* Computer program must implement busy.txt file
-* LCDK
-    * LCDK must read the busy.txt file
-    * LCDK must be able to read busy.txt file from computer
-    * LCDK must write "done.txt" and "input.txt" files
-* See specs sheet.
-
-
 # Tad-The-Therapist
 Code for senior design project. The design project was broken down into
 three segments\: the LCDK, the computer program, and the web server.
@@ -22,7 +11,7 @@ The LCDK does all the speech signal processing. The LCDK then outputs its MFCC s
 The computer program has both `train` and `main` functionalities. 
 
 
-The `train` program trains a given data set and tests the `chatbot.cpp`.
+The `train` program trains a given data set.
 
 
 The `main` program does a trial speech recognition given a `.txt` file from the LCDK. The `main` program does speech recognition via hidden markov models and export the identified speech as a `.txt` file. The computer program also determines an appropriate response and appends it onto the same `.txt` file. The `.txt` file is located in the `/computer/output/` folder.
@@ -103,18 +92,14 @@ kill -9 PID PID PID
 │   ├── input.txt<br/>
 │   └── done.txt<br/>
 └── **computer**<br/>
-│   ├── busy.txt<br/>
-│   ├── NN_values.txt<br/>
 │   └── **output**<br/>
 │       ├── output.txt<br/>
 │       └── convo#.txt<br/>
 └── **Web Server**<br/>
 
 **/lcdk/start.txt** - Initialize therapy session for C++ program<br/>
-**/lcdk/input.txt** - Features that goes into the neural network<br/>
+**/lcdk/input.txt** - Features that goes into the Hidden Makrov Model<br/>
 **/lcdk/done.txt** - Computer program detects if new value in file is different from current value, then reads the new input text file<br/>
-**/computer/busy.txt** - LCDK reads this file to trigger button usability based on whether computer is idle or not. 0 means idle, 1 means busy.<br/>
-**/computer/NN_values.txt** - Values exported by the `training` program to be used by the `main` program for trial runs on its neural network.
 **/computer/output/output.txt** - Used to display current chat history in web interface.<br/>
 **/computer/output/convo#.txt** - Used to store conversation history.<br/>
 
