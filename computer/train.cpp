@@ -437,8 +437,11 @@ void train(string word, vector<string> files, int clusters) {
 int main() {
     
     // NOTE: Must update known words with proper parameters
+    // NOTE: Command for obtaining new training set
+    // cp /mnt/c/Users/ivanm/workspace_v8/lcdk/Debug/input.txt ./training/word1.txt
 
     // Training set for the word "cat"
+    /*
     const string CAT1 = COMPUTER_TRAINING_PATH + "cat1.txt";
     const string CAT2 = COMPUTER_TRAINING_PATH + "cat2.txt";
     const string CAT3 = COMPUTER_TRAINING_PATH + "cat3.txt";
@@ -471,24 +474,69 @@ int main() {
     const string PROFESSOR8 = COMPUTER_TRAINING_PATH + "professor8.txt";
     const string PROFESSOR9 = COMPUTER_TRAINING_PATH + "professor9.txt";
     const string PROFESSOR10 = COMPUTER_TRAINING_PATH + "professor10.txt";
-
+*/
 
 
     // Parameters to modify
-    int clusters = 10;
-
+    /*
     vector<string> cat = {CAT1, CAT2, CAT3, CAT4, CAT5, CAT6, CAT7, CAT8, CAT9, CAT10};
     vector<string> dog = {DOG1, DOG2, DOG3, DOG4, DOG5, DOG6, DOG7, DOG8, DOG9, DOG10};
     vector<string> professor = {PROFESSOR1, PROFESSOR2, PROFESSOR3, PROFESSOR4, PROFESSOR5, PROFESSOR6, PROFESSOR7, PROFESSOR8, PROFESSOR9, PROFESSOR10};
+*/
+    vector<string> cat, dog, professor, angry, sick, miserable, depression, sad, happy, goodbye;
+
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "cat" + to_string(i) + ".txt";
+        cat.push_back(fileName);
+    }
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "dog" + to_string(i) + ".txt";
+        dog.push_back(fileName);
+    }
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "sad" + to_string(i) + ".txt";
+        sad.push_back(fileName);
+    }
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "happy" + to_string(i) + ".txt";
+        happy.push_back(fileName);
+    }
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "professor" + to_string(i) + ".txt";
+        professor.push_back(fileName);
+    }
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "angry" + to_string(i) + ".txt";
+        angry.push_back(fileName);
+    }
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "sick" + to_string(i) + ".txt";
+        sick.push_back(fileName);
+    }
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "miserable" + to_string(i) + ".txt";
+        miserable.push_back(fileName);
+    }
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "depression" + to_string(i) + ".txt";
+        depression.push_back(fileName);
+    }
+    for(int i = 1; i < 11; i++) {
+        string fileName = COMPUTER_TRAINING_PATH + "goodbye" + to_string(i) + ".txt";
+        goodbye.push_back(fileName);
+    }
+
 
 
     // Add words to train
-    vector<string> words = {"cat", "dog", "professor"};
-    vector<vector<string>> files = {cat, dog, professor};
+    vector<int> clusters = {5, 5, 9, 7, 5, 9, 9, 5, 7, 8};
+    vector<string> words = {"cat", "dog", "professor", "angry", "sick", "miserable", "depression", "sad", "happy", "goodbye"};
+    vector<vector<string>> files = {cat, dog, professor, angry, sick, miserable, depression, sad, happy, goodbye};
 
+    auto cluster = clusters.begin();
     auto file = files.begin();
-    for(auto word = words.begin(); word != words.end(); word++, file++) {
-        train(*word, *file, clusters);
+    for(auto word = words.begin(); word != words.end(); word++, file++, cluster++) {
+        train(*word, *file, *cluster);
     }
     cout << "done" << endl;
 }

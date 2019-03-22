@@ -29,7 +29,8 @@ vector<HMM> hmms;
 void buildHMMs() {
 
     // NOTE: Must update this array with every known vocabulary word
-    vector<string> words = {"cat", "dog", "professor"};
+    // TODO: Add word "professor" here
+    vector<string> words = {"cat", "dog", "professor", "angry", "sick", "miserable", "depression", "sad", "happy", "goodbye"};
     
 	// Read text files for data to insert into HMM
     for(auto wordPtr = words.begin(); wordPtr != words.end(); wordPtr++) {

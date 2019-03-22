@@ -10,21 +10,11 @@ professor
 00I heard the best professors come out of the automotive industry.;
 angry
 25For every minute you remain angry, you give up sixty seconds of peace of mind.;25To be angry is to let others' mistakes punish yourself.;25Fear is the path to the dark side. Fear leads to anger. Anger leads to hate. Hate leads to suffering.;25Cut all toxic people from your life.;
-mad
-25For every minute you remain angry, you give up sixty seconds of peace of mind.;25To be angry is to let others' mistakes punish yourself.;25Fear is the path to the dark side. Fear leads to anger. Anger leads to hate. Hate leads to suffering.;25Cut all toxic people from your life.;
 sick
 00Health is not valued until sickness comes;
 miserable
 50Be miserable or motivate yourself. Whatever has to be done, it is always your choice.;50Happy people find a way to live with their problems, and miserable people let their problems stop them from living.;
-depressed
-25Saying thanks to the world, and acknowledging your own accomplishments, is a great way to feel good and stay positive.;25Life is full of challenges, seen and unseen, so to look and feel great, you must hold your head up each day and project your inner confidence.;25Laugh at yourself. It tones your facial muscles and attitude.;25Most great people have attained their greatest success one step beyond their greatest failure.;
 depression
 25Saying thanks to the world, and acknowledging your own accomplishments, is a great way to feel good and stay positive.;25Life is full of challenges, seen and unseen, so to look and feel great, you must hold your head up each day and project your inner confidence.;25Laugh at yourself. It tones your facial muscles and attitude.;25Most great people have attained their greatest success one step beyond their greatest failure.;
 goodbye
 00I am glad to have helped. Good bye!;
-hello
-50Hello! How are you feeling today?;25Salutations! How are doing today?; 25Greetings! How can I help you?;
-hi
-50Hello! How are you feeling today?;25Salutations! How are doing today?; 25Greetings! How can I help you?;
-hey
-50Hello! How are you feeling today?;25Salutations! How are doing today?; 25Greetings! How can I help you?;
