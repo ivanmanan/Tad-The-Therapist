@@ -15,7 +15,6 @@
 #include <sstream>
 #include <iterator>
 #include "./auxiliary/duplex.h"
-#include "./auxiliary/conversation.h"
 #include "./auxiliary/chatbot.h"
 #include "./auxiliary/ml.h"
 

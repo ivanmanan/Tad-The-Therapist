@@ -144,9 +144,6 @@ HMM::HMM(string word, vector<State> states, vector<vector<long double>> transPro
 	m_states = states;
 	m_transProb = transProb;
 	m_numStates = transProb.size();
-
-	//TODO: constructor retrieves expected MFCC vectors and 
-	//      transition probability matrix from a file
 }
 
 

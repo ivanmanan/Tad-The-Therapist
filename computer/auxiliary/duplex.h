@@ -50,19 +50,13 @@ bool readCharFile(const string FILE_NAME, bool currentValue) {
     }
 }
 
-#include <cstdio>
 // Function that deletes current output.txt file and creates a new one with a greeting
 void startOutputFile(const string FILE_NAME) {
     // Delete existing output.txt file
     ofstream ofs;
     ofs.open(FILE_NAME, ofstream::trunc);
     ofs.close();
-/*     if (remove(FILE_NAME.c_str()) != 0) {
-        cout << "FILE DELETION FAILED" << endl;
-    }
-    else {
-        cout << "FILE DELETED SUCCESSFULLY" << endl;
-    } */
+
     // Append greeting message to new output.txt
     string message = "Hello my name is Tad, how can I help you?";
     appendToFile(FILE_NAME, message);

@@ -21,7 +21,7 @@ trial.o: trial.cpp duplex.h ml.h
 	$(CXX) -c trial.cpp
 train.o: train.cpp duplex.h ml.h
 	$(CXX) -c train.cpp
-main.o: main.cpp duplex.h conversation.h chatbot.h ml.h
+main.o: main.cpp duplex.h chatbot.h ml.h
 	$(CXX) -c main.cpp
 
 # make clean
