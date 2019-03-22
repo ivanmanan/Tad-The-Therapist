@@ -2,9 +2,6 @@ CXX=g++
 VPATH= auxiliary/
 RM=rm -f
 
-# TODO: Add CPP flag varable here that implements multithreading for the main program
-CXXFLAGS=-I auxiliary/
-
 # make
 all: chat train main trial
 

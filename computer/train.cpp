@@ -19,7 +19,6 @@ const string COMPUTER_TRANS_PROB_PATH = "/mnt/c/therapist/computer/transProb/";
 //error threshold for determining convergence of kmeans
 const double errorThresholdSquare = 0.000001;
 
-
 //calculate square of distance between 2 vectors
 double sqDist(vector<double> centroid, vector<double> point) {
         if (centroid.size() != point.size())
@@ -100,7 +99,6 @@ bool compareVecs(const vector<double>& v1, const vector<double>& v2)
     return true;
 }
 
-
 vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data, int numClusters, double min, double max) {
 
     vector<vector<vector<double>>> clustersData = data;
@@ -109,10 +107,8 @@ vector<vector<vector<double>>> kmeans(const vector<vector<vector<double>>>& data
     vector<double> error(numClusters, 99999);
     bool keepRunning = true;
 
-
     ////////////////////////////
     //initialization
-    ////////////////////////////
     srand(time(NULL));
     for (int i = 0; i < numClusters; i++)
     {
@@ -390,7 +386,6 @@ void train(string word, vector<string> files, int clusters) {
         }
         */
 
-        // NOTE: This is shoddy
         for(int r = 0; r < means.size(); r++) {
             for(int c = 0; c < means[r].size(); c++) {
                 //cout << means[r].size() - 1<< endl;
@@ -439,50 +434,6 @@ int main() {
     // NOTE: Must update known words with proper parameters
     // NOTE: Command for obtaining new training set
     // cp /mnt/c/Users/ivanm/workspace_v8/lcdk/Debug/input.txt ./training/word1.txt
-
-    // Training set for the word "cat"
-    /*
-    const string CAT1 = COMPUTER_TRAINING_PATH + "cat1.txt";
-    const string CAT2 = COMPUTER_TRAINING_PATH + "cat2.txt";
-    const string CAT3 = COMPUTER_TRAINING_PATH + "cat3.txt";
-    const string CAT4 = COMPUTER_TRAINING_PATH + "cat4.txt";
-    const string CAT5 = COMPUTER_TRAINING_PATH + "cat5.txt";
-    const string CAT6 = COMPUTER_TRAINING_PATH + "cat6.txt";
-    const string CAT7 = COMPUTER_TRAINING_PATH + "cat7.txt";
-    const string CAT8 = COMPUTER_TRAINING_PATH + "cat8.txt";
-    const string CAT9 = COMPUTER_TRAINING_PATH + "cat9.txt";
-    const string CAT10 = COMPUTER_TRAINING_PATH + "cat10.txt";
-
-    const string DOG1 = COMPUTER_TRAINING_PATH + "dog1.txt";
-    const string DOG2 = COMPUTER_TRAINING_PATH + "dog2.txt";
-    const string DOG3 = COMPUTER_TRAINING_PATH + "dog3.txt";
-    const string DOG4 = COMPUTER_TRAINING_PATH + "dog4.txt";
-    const string DOG5 = COMPUTER_TRAINING_PATH + "dog5.txt";
-    const string DOG6 = COMPUTER_TRAINING_PATH + "dog6.txt";
-    const string DOG7 = COMPUTER_TRAINING_PATH + "dog7.txt";
-    const string DOG8 = COMPUTER_TRAINING_PATH + "dog8.txt";
-    const string DOG9 = COMPUTER_TRAINING_PATH + "dog9.txt";
-    const string DOG10 = COMPUTER_TRAINING_PATH + "dog10.txt";
-
-    const string PROFESSOR1 = COMPUTER_TRAINING_PATH + "professor1.txt";
-    const string PROFESSOR2 = COMPUTER_TRAINING_PATH + "professor2.txt";
-    const string PROFESSOR3 = COMPUTER_TRAINING_PATH + "professor3.txt";
-    const string PROFESSOR4 = COMPUTER_TRAINING_PATH + "professor4.txt";
-    const string PROFESSOR5 = COMPUTER_TRAINING_PATH + "professor5.txt";
-    const string PROFESSOR6 = COMPUTER_TRAINING_PATH + "professor6.txt";
-    const string PROFESSOR7 = COMPUTER_TRAINING_PATH + "professor7.txt";
-    const string PROFESSOR8 = COMPUTER_TRAINING_PATH + "professor8.txt";
-    const string PROFESSOR9 = COMPUTER_TRAINING_PATH + "professor9.txt";
-    const string PROFESSOR10 = COMPUTER_TRAINING_PATH + "professor10.txt";
-*/
-
-
-    // Parameters to modify
-    /*
-    vector<string> cat = {CAT1, CAT2, CAT3, CAT4, CAT5, CAT6, CAT7, CAT8, CAT9, CAT10};
-    vector<string> dog = {DOG1, DOG2, DOG3, DOG4, DOG5, DOG6, DOG7, DOG8, DOG9, DOG10};
-    vector<string> professor = {PROFESSOR1, PROFESSOR2, PROFESSOR3, PROFESSOR4, PROFESSOR5, PROFESSOR6, PROFESSOR7, PROFESSOR8, PROFESSOR9, PROFESSOR10};
-*/
     vector<string> cat, dog, professor, angry, sick, miserable, depression, sad, happy, goodbye;
 
     for(int i = 1; i < 11; i++) {
@@ -526,17 +477,14 @@ int main() {
         goodbye.push_back(fileName);
     }
 
-
-
     // Add words to train
     vector<int> clusters = {5, 5, 9, 7, 5, 9, 9, 5, 7, 8};
     vector<string> words = {"cat", "dog", "professor", "angry", "sick", "miserable", "depression", "sad", "happy", "goodbye"};
     vector<vector<string>> files = {cat, dog, professor, angry, sick, miserable, depression, sad, happy, goodbye};
-
     auto cluster = clusters.begin();
     auto file = files.begin();
     for(auto word = words.begin(); word != words.end(); word++, file++, cluster++) {
         train(*word, *file, *cluster);
     }
-    cout << "done" << endl;
+    cout << "PROGRAM: Training has been completed." << endl;
 }

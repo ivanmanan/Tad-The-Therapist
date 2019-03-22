@@ -12,7 +12,7 @@ using namespace std;
 using namespace this_thread; // sleep_for, sleep_until
 using namespace chrono; // nanoseconds, system_clock, seconds
 
-// NOTE: When project is finalized, run C++ program on WSL and web server on PowerShell
+// NOTE: Run C++ program on WSL and web server on PowerShell
 const string LCDK_FILE_PATH = "/mnt/c/Users/ivanm/workspace_v8/lcdk/Debug/";
 const string COMPUTER_WORDS_PATH = "/mnt/c/therapist/computer/words/";
 const string COMPUTER_TRANS_PROB_PATH = "/mnt/c/therapist/computer/transProb/";
@@ -25,11 +25,9 @@ const string COMPUTER_OUTPUT_FILE = COMPUTER_OUTPUT_PATH + "output.txt";
 
 vector<HMM> hmms;
 
-// TODO: Copy and paste this function into main.cpp
 void buildHMMs() {
 
     // NOTE: Must update this array with every known vocabulary word
-    // TODO: Add word "professor" here
     vector<string> words = {"cat", "dog", "professor", "angry", "sick", "miserable", "depression", "sad", "happy", "goodbye"};
     
 	// Read text files for data to insert into HMM
@@ -142,12 +140,6 @@ string ml(string computer_input) {
     double max_probability = 0;
     string likely_word;
 
-    // TODO: There is an error with hmm->prob or the input 2d array due to scaling
-    // Multiply scale by a factor of 10
-    //const long double scale = 100;
-    
-
-
 	// Test the mfcc input to every HMM and return the word with greatest probability
     long double scale = 1;
 
@@ -161,10 +153,6 @@ string ml(string computer_input) {
         for(auto hmm = hmms.begin(); hmm != hmms.end(); hmm++) {
             string word = hmm->word();
             cout << "PROGRAM: Calculating probability for word: " << word << endl;
-
-            // TODO: Must create for-loop that scales until i get a probability
-            //       Must be able to break out of infinite recursion
-
             double probability = hmm->prob(input, scale);
             cout << "PROGRAM: Word " << word << " has probability " << probability << endl;
             if(probability > max_probability) {
