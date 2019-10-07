@@ -73,6 +73,7 @@ sudo service mysql start
 If the `Node.js` server is running properly but the frontend browser is not loading, then you may have to kill all other existing `Node.js` processes.
 ```bash
 ps aux | grep node
+lsof -i tcp:PORT_NUMBER
 kill -9 PID PID PID
 ```
 
